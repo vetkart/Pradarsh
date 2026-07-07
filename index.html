@@ -6,539 +6,617 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="VetScan USG">
-<meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0d1b3e">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon.png">
-<title>VetScan USG — </title>
+<title>VetScan USG</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif}
-:root{
-  --navy:#0d1b3e;--teal:#0f6e56;--gold:#c8a84b;
-  --white:#fff;--gray:#f2f2f7;--lgray:#e5e5ea;
-  --dgray:#1c1c1e;--mgray:#6c6c70;--red:#d32f2f;
-  --orange:#e65100;--green:#1b5e20;--lgreen:#e8f5e9;
-  --lorange:#fff3e0;--lred:#ffebee;--lnavy:#e8eaf6;--lteal:#e0f2f1;
-}
+:root{--navy:#0d1b3e;--teal:#0f6e56;--gold:#c8a84b;--red:#c62828;--orange:#e65100;--green:#1b5e20;
+  --gray:#f2f2f7;--lgray:#e5e5ea;--dgray:#1c1c1e;--mgray:#6c6c70;
+  --lgreen:#e8f5e9;--lorange:#fff3e0;--lnavy:#e8eaf6;--lteal:#e0f2f1}
+html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;background:var(--gray);color:var(--dgray)}
+#app{display:flex;flex-direction:column;min-height:100vh}
 
-/* ── SHELL ── */
-#shell{display:flex;flex-direction:column;height:100vh;height:100dvh;background:var(--gray)}
-#topbar{background:var(--navy);color:#fff;padding:env(safe-area-inset-top,12px) 14px 10px;
-  display:flex;align-items:center;gap:10px;flex-shrink:0;min-height:56px}
-#topbar-icon{width:34px;height:34px;border-radius:9px;background:var(--gold);
-  display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-#topbar-text{flex:1}
-#topbar-title{font-size:14px;font-weight:700;letter-spacing:0.2px}
-#topbar-sub{font-size:10px;opacity:0.65;margin-top:1px}
-#topbar-btn{background:var(--gold);color:var(--navy);border:none;border-radius:8px;
-  padding:6px 11px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0}
+/* TOPBAR */
+#topbar{background:var(--navy);padding:10px 14px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100}
+#topbar-ico{width:34px;height:34px;border-radius:9px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+#topbar-txt{flex:1}
+#topbar-name{font-size:14px;font-weight:700;color:#fff}
+#topbar-sub{font-size:10px;color:rgba(255,255,255,0.6);margin-top:1px}
+.top-btn{background:var(--gold);color:var(--navy);border:none;border-radius:8px;padding:6px 11px;font-size:12px;font-weight:700;cursor:pointer}
 
-/* ── TABS (scrollable) ── */
-#tab-bar{background:var(--white);border-bottom:1px solid var(--lgray);
-  overflow-x:auto;-webkit-overflow-scrolling:touch;
-  display:flex;flex-shrink:0;scrollbar-width:none}
-#tab-bar::-webkit-scrollbar{display:none}
-.tab{padding:10px 14px;font-size:12px;font-weight:500;
-  white-space:nowrap;cursor:pointer;color:var(--mgray);
-  border-bottom:2.5px solid transparent;transition:all 0.15s;flex-shrink:0}
+/* TABS */
+#tabs{background:#fff;border-bottom:1px solid var(--lgray);overflow-x:auto;-webkit-overflow-scrolling:touch;display:flex;scrollbar-width:none;position:sticky;top:54px;z-index:99}
+#tabs::-webkit-scrollbar{display:none}
+.tab{padding:10px 13px;font-size:12px;font-weight:500;white-space:nowrap;cursor:pointer;color:var(--mgray);border-bottom:2.5px solid transparent;flex-shrink:0;transition:all .15s}
 .tab.active{color:var(--navy);border-bottom-color:var(--navy);font-weight:700}
 .tab.done{color:var(--teal);border-bottom-color:var(--teal)}
 
-/* ── SCROLL BODY ── */
-#body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 12px 100px}
-
-/* ── CARDS ── */
-.card{background:var(--white);border-radius:14px;padding:14px;margin-bottom:12px;
-  box-shadow:0 1px 6px rgba(0,0,0,0.08)}
-.card-title{font-size:11px;font-weight:700;color:var(--teal);
-  text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px}
-.card-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;
-  padding-bottom:10px;border-bottom:1px solid var(--lgray)}
-.card-icon{width:34px;height:34px;border-radius:9px;background:var(--lnavy);
-  display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-.card-label{font-size:14px;font-weight:700;color:var(--navy)}
-.card-sub{font-size:11px;color:var(--mgray);margin-top:1px}
-
-/* ── FIELDS ── */
+/* CONTENT */
+#content{padding:12px 12px 90px}
+.card{background:#fff;border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 6px rgba(0,0,0,.08)}
+.card-title{font-size:11px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px}
+.organ-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--lgray)}
+.organ-ico{width:34px;height:34px;border-radius:9px;background:var(--lnavy);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.organ-lbl{font-size:14px;font-weight:700;color:var(--navy)}
+.organ-sub{font-size:11px;color:var(--mgray);margin-top:1px}
 .fg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.fg.one{grid-template-columns:1fr}
-.f{display:flex;flex-direction:column;gap:4px}
+.f{display:flex;flex-direction:column;gap:3px}
 .f.full{grid-column:1/-1}
-.f label{font-size:11px;font-weight:600;color:var(--navy);
-  text-transform:uppercase;letter-spacing:0.5px}
-.f select,.f input{font-size:14px;padding:10px 11px;
-  border-radius:10px;border:1px solid var(--lgray);
-  background:var(--gray);color:var(--dgray);
-  width:100%;-webkit-appearance:none;appearance:none}
-.f select:focus,.f input:focus{outline:none;border-color:var(--teal);background:var(--white)}
-.f .hint{font-size:10px;color:var(--mgray);margin-top:2px;padding-left:2px}
-.sec-lbl{grid-column:1/-1;font-size:10px;font-weight:700;color:var(--teal);
-  text-transform:uppercase;letter-spacing:1px;
-  padding-top:8px;border-top:1px solid var(--lgray);margin-top:2px}
+.f label{font-size:11px;font-weight:600;color:var(--navy);text-transform:uppercase;letter-spacing:.4px}
+.f select,.f input,.f textarea{font-size:14px;padding:10px 10px;border-radius:10px;border:1px solid var(--lgray);background:var(--gray);color:var(--dgray);width:100%;-webkit-appearance:none}
+.f select:focus,.f input:focus,.f textarea:focus{outline:none;border-color:var(--teal);background:#fff}
+.hint{font-size:10px;color:var(--mgray);margin-top:1px}
+.btns{display:flex;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--lgray)}
+.btn{flex:1;padding:12px;border-radius:11px;font-size:14px;font-weight:700;border:none;cursor:pointer;transition:transform .1s,opacity .1s;display:flex;align-items:center;justify-content:center;gap:5px}
+.btn:active{transform:scale(.97);opacity:.85}
+.btn-s{background:var(--lgray);color:var(--dgray)}
+.btn-p{background:var(--teal);color:#fff}
+#gen{position:fixed;bottom:12px;left:12px;right:12px;z-index:200;background:var(--navy);color:#fff;border:none;border-radius:14px;padding:16px;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(13,27,62,.4);display:flex;align-items:center;justify-content:center;gap:8px}
+#gen:active{transform:scale(.98)}
 
-/* ── BOTTOM BUTTONS ── */
-.btn-row{display:flex;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--lgray)}
-.btn{flex:1;padding:12px;border-radius:11px;font-size:14px;font-weight:700;
-  border:none;cursor:pointer;display:flex;align-items:center;
-  justify-content:center;gap:6px;transition:transform 0.1s,opacity 0.1s}
-.btn:active{transform:scale(0.96);opacity:0.85}
-.btn-sec{background:var(--lgray);color:var(--dgray)}
-.btn-pri{background:var(--teal);color:var(--white)}
+/* ── REPORT STYLES ── */
+#rep-bar{background:var(--navy);padding:10px 14px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100;display:none}
+#report{display:none;padding:0}
+.rep-btn{background:var(--gold);color:var(--navy);border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer}
+.rep-btn2{background:transparent;color:var(--gold);border:1px solid var(--gold);border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer}
 
-/* ── FIXED GENERATE BTN ── */
-#gen-btn{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);
-  left:14px;right:14px;z-index:99;
-  background:var(--navy);color:var(--white);border:none;
-  border-radius:14px;padding:16px;font-size:15px;font-weight:700;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
-  box-shadow:0 4px 20px rgba(13,27,62,0.4);
-  transition:transform 0.1s,opacity 0.1s}
-#gen-btn:active{transform:scale(0.98);opacity:0.9}
+/* REPORT PAPER */
+.rpage{background:#fff;margin:10px;border-radius:14px;padding:18px;box-shadow:0 1px 8px rgba(0,0,0,.1)}
 
-/* ── REPORT ── */
-#report-view{display:none;flex-direction:column;height:100%;overflow:hidden}
-#report-view.visible{display:flex}
-#report-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 12px 100px}
-#report-topbar{background:var(--navy);color:#fff;padding:env(safe-area-inset-top,12px) 14px 10px;
-  display:flex;align-items:center;gap:10px;flex-shrink:0;min-height:56px}
-#rep-back{background:var(--gold);color:var(--navy);border:none;border-radius:8px;
-  padding:6px 11px;font-size:12px;font-weight:700;cursor:pointer}
-#rep-print{background:transparent;color:var(--gold);border:1px solid var(--gold);
-  border-radius:8px;padding:6px 11px;font-size:12px;font-weight:700;cursor:pointer}
-.rep-card{background:var(--white);border-radius:14px;padding:16px;margin-bottom:12px;
-  box-shadow:0 1px 6px rgba(0,0,0,0.08)}
-.rep-hdr-logo{text-align:center;padding-bottom:12px;border-bottom:3px solid var(--navy);margin-bottom:12px}
-.rep-hdr-title{font-size:16px;font-weight:800;color:var(--navy);letter-spacing:0.3px}
-.rep-hdr-sub{font-size:11px;color:var(--mgray);margin-top:3px}
-.rep-hdr-line{height:3px;background:linear-gradient(90deg,var(--navy),var(--teal),var(--gold));
-  border-radius:2px;margin:8px 0}
-.rep-hdr-type{font-size:13px;font-weight:700;color:var(--teal);letter-spacing:0.3px;margin-top:4px}
-.pat-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;
-  background:var(--lnavy);border-radius:10px;padding:10px;margin-bottom:14px}
-.pat-f{display:flex;flex-direction:column}
-.pat-f span:first-child{font-size:9px;font-weight:700;color:var(--mgray);text-transform:uppercase;letter-spacing:0.5px}
-.pat-f span:last-child{font-size:13px;font-weight:600;color:var(--dgray)}
-.rep-section{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--lgray)}
-.rep-section:last-of-type{border-bottom:none}
-.rs-hdr{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.rs-ico{width:28px;height:28px;border-radius:7px;background:var(--lnavy);
-  display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.rs-title{font-size:13px;font-weight:700;color:var(--navy)}
-.finding{display:flex;gap:6px;padding:4px 0;border-bottom:0.5px solid var(--lgray)}
-.finding:last-child{border-bottom:none}
-.f-lbl{font-size:11px;color:var(--mgray);min-width:110px;flex-shrink:0;padding-top:1px}
-.f-val{font-size:12px;font-weight:600;color:var(--dgray);flex:1}
-.f-val.abn{color:var(--red)}
-.diff-blk{background:var(--lorange);border-left:3px solid var(--orange);
-  border-radius:0 8px 8px 0;padding:8px 10px;margin-top:8px}
-.diff-lbl{font-size:10px;font-weight:700;color:var(--orange);
-  text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px}
-.diff-chips{display:flex;flex-wrap:wrap;gap:5px}
-.diff-chip{background:var(--white);border:1px solid #f0c080;border-radius:6px;
-  padding:3px 9px;font-size:11px;color:var(--dgray)}
-.overall{background:var(--navy);border-radius:12px;padding:14px;margin-bottom:10px}
-.ov-title{color:var(--gold);font-size:13px;font-weight:700;margin-bottom:8px}
-.ov-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
-.ov-chip{background:rgba(200,168,75,0.18);border:1px solid rgba(200,168,75,0.4);
-  border-radius:6px;padding:4px 10px;font-size:11px;color:#fde8a0}
-.ov-note{font-size:10px;color:rgba(255,255,255,0.45);line-height:1.6}
-.norm-blk{background:var(--lgreen);border-radius:12px;padding:12px;
-  text-align:center;color:var(--green);font-weight:700;font-size:14px}
-.sig-row{display:flex;justify-content:space-between;
-  margin-top:16px;padding-top:12px;border-top:1px solid var(--lgray)}
-.sig-f{border-bottom:1px solid var(--dgray);
-  width:110px;padding-bottom:4px;font-size:10px;color:var(--mgray);text-align:center}
+/* LETTERHEAD */
+.lhead{border-bottom:3px double var(--navy);padding-bottom:10px;margin-bottom:12px;text-align:center}
+.lhead-title{font-size:17px;font-weight:800;color:var(--navy);letter-spacing:.3px;text-transform:uppercase}
+.lhead-sub{font-size:12px;color:var(--navy);font-weight:600;margin-top:2px}
+.lhead-addr{font-size:11px;color:var(--mgray);margin-top:2px}
+.lhead-line{height:2px;background:linear-gradient(90deg,var(--navy),var(--gold),var(--teal));border-radius:2px;margin:8px 0 4px}
+.lhead-rtype{font-size:13px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.5px}
 
-/* ── PRINT ── */
+/* PATIENT BOX */
+.pat-box{border:1.5px solid var(--navy);border-radius:8px;margin-bottom:12px;overflow:hidden}
+.pat-box-title{background:var(--navy);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;text-transform:uppercase;letter-spacing:.8px}
+.pat-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.pat-row{display:flex;border-bottom:.5px solid var(--lgray)}
+.pat-row:last-child{border-bottom:none}
+.pat-lbl{font-size:10px;font-weight:700;color:var(--navy);padding:5px 8px;min-width:90px;border-right:.5px solid var(--lgray);background:var(--lnavy);text-transform:uppercase;letter-spacing:.3px}
+.pat-val{font-size:11px;color:var(--dgray);padding:5px 8px;flex:1}
+
+/* ORGAN TABLE */
+.organ-table{width:100%;border-collapse:collapse;margin-bottom:12px;font-size:11px}
+.organ-table th{background:var(--navy);color:#fff;padding:5px 7px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.organ-table td{padding:6px 7px;border:.5px solid var(--lgray);vertical-align:top;line-height:1.5}
+.organ-table tr:nth-child(even) td{background:#fafafa}
+.organ-name{font-weight:700;color:var(--navy);font-size:11px;white-space:nowrap}
+.param-val{color:var(--dgray);font-size:11px}
+.findings-cell{font-size:11px;color:var(--dgray)}
+.abn-tag{display:inline-block;background:var(--lorange);border:1px solid #f0c080;border-radius:4px;padding:1px 6px;font-size:10px;color:var(--orange);margin:1px 2px 1px 0;font-weight:600}
+.norm-tag{display:inline-block;background:var(--lgreen);border:1px solid #a8dfc2;border-radius:4px;padding:1px 6px;font-size:10px;color:var(--green);margin:1px 0}
+.remarks-cell{font-size:10px;color:var(--mgray);font-style:italic}
+
+/* DIFF TABLE */
+.diff-table{width:100%;border-collapse:collapse;margin-bottom:12px;font-size:11px}
+.diff-table th{background:var(--orange);color:#fff;padding:5px 7px;font-size:10px;font-weight:700;text-transform:uppercase}
+.diff-table td{padding:5px 7px;border:.5px solid #f0c080;vertical-align:top}
+.diff-table tr:nth-child(even) td{background:var(--lorange)}
+
+/* IMPRESSION BOX */
+.imp-box{border:2px solid var(--navy);border-radius:8px;margin-bottom:10px;overflow:hidden}
+.imp-title{background:var(--navy);color:#fff;font-size:11px;font-weight:700;padding:5px 10px;text-transform:uppercase;letter-spacing:.8px}
+.imp-body{padding:10px;font-size:12px;color:var(--dgray);line-height:1.7;min-height:50px}
+.rec-box{border:2px solid var(--teal);border-radius:8px;margin-bottom:12px;overflow:hidden}
+.rec-title{background:var(--teal);color:#fff;font-size:11px;font-weight:700;padding:5px 10px;text-transform:uppercase;letter-spacing:.8px}
+.rec-body{padding:10px;font-size:12px;color:var(--dgray);line-height:1.7;min-height:40px}
+
+/* SIGNATURE */
+.sig-section{display:flex;justify-content:space-between;margin-top:16px;padding-top:12px;border-top:2px solid var(--navy)}
+.sig-block{text-align:center}
+.sig-line{border-bottom:1px solid var(--dgray);width:130px;margin-bottom:4px}
+.sig-label{font-size:10px;color:var(--mgray)}
+.sig-name{font-size:11px;font-weight:700;color:var(--navy);margin-top:2px}
+
+/* FOOTER */
+.rep-footer{text-align:center;font-size:9px;color:var(--mgray);margin-top:12px;padding-top:8px;border-top:.5px solid var(--lgray)}
+
+/* PRINT */
 @media print{
-  #shell{display:none!important}
-  #report-view{display:flex!important;height:auto;overflow:visible}
-  #report-topbar,#gen-btn{display:none!important}
-  #report-scroll{overflow:visible;padding:0}
-  .rep-card{box-shadow:none;border:1px solid #ccc}
-  @page{size:A4;margin:12mm}
+  #app{display:none!important}
+  #rep-bar{display:none!important}
+  #report{display:block!important;padding:0}
+  .rpage{margin:0;border-radius:0;box-shadow:none;border:none}
+  @page{size:A4;margin:10mm}
 }
 </style>
 </head>
 <body>
 
-<!-- MAIN APP -->
-<div id="shell">
+<div id="app">
   <div id="topbar">
-    <div id="topbar-icon">🔬</div>
-    <div id="topbar-text">
-      <div id="topbar-title">VetScan USG Report</div>
+    <div id="topbar-ico">🔬</div>
+    <div id="topbar-txt">
+      <div id="topbar-name">VetScan USG Report</div>
       <div id="topbar-sub">Abdominal USG · Canine &amp; Feline</div>
     </div>
-    <button id="topbar-btn" onclick="resetAll()">New ↺</button>
+    <button class="top-btn" onclick="resetAll()">New ↺</button>
   </div>
-
-  <div id="tab-bar"></div>
-
-  <div id="body">
-    <!-- PATIENT CARD -->
-    <div class="card" id="patient-card">
-      <div class="card-title">Patient Details</div>
+  <div id="tabs"></div>
+  <div id="content">
+    <div class="card" id="patcard">
+      <div class="card-title">Patient &amp; Owner Details</div>
       <div class="fg">
-        <div class="f"><label>Name</label><input id="pt-name" placeholder="Patient name" autocomplete="off"></div>
-        <div class="f"><label>Species</label>
-          <select id="pt-species"><option>Canine</option><option>Feline</option></select></div>
+        <div class="f"><label>Case No.</label><input id="pt-case" placeholder="Case number" autocomplete="off"></div>
+        <div class="f"><label>Date</label><input id="pt-date" type="date"></div>
+        <div class="f"><label>Patient Name</label><input id="pt-name" placeholder="Patient name" autocomplete="off"></div>
+        <div class="f"><label>Species</label><select id="pt-sp"><option>Canine</option><option>Feline</option></select></div>
         <div class="f"><label>Breed</label><input id="pt-breed" placeholder="Breed" autocomplete="off"></div>
         <div class="f"><label>Age &amp; Sex</label><input id="pt-age" placeholder="e.g. 5Y / Male" autocomplete="off"></div>
-        <div class="f"><label>Owner</label><input id="pt-owner" placeholder="Owner name" autocomplete="off"></div>
-        <div class="f"><label>Date</label><input id="pt-date" type="date"></div>
-        <div class="f"><label>Ref. Doctor</label><input id="pt-ref" placeholder="Referring vet" autocomplete="off"></div>
-        <div class="f"><label>Machine / Probe</label><input id="pt-machine" placeholder="e.g. MyLab / 7.5MHz" autocomplete="off"></div>
+        <div class="f"><label>Body Wt. (kg)</label><input id="pt-wt" type="number" step="0.1" placeholder="kg" autocomplete="off"></div>
+        <div class="f"><label>Owner Name</label><input id="pt-owner" placeholder="Owner name" autocomplete="off"></div>
+        <div class="f"><label>Contact No.</label><input id="pt-contact" placeholder="Phone number" autocomplete="off"></div>
+        <div class="f"><label>Ref. Clinician</label><input id="pt-ref" placeholder="Referring vet" autocomplete="off"></div>
+        <div class="f"><label>Fasting Status</label><select id="pt-fast"><option>Fasted — 12 hrs</option><option>Fasted — 6 hrs</option><option>Not fasted</option><option>Unknown</option></select></div>
+        <div class="f"><label>Sedation</label><select id="pt-sed"><option>None</option><option>Chemical restraint</option><option>Sedated — acepromazine</option><option>Sedated — dexmedetomidine</option><option>GA</option></select></div>
+        <div class="f"><label>Machine</label><input id="pt-mach" placeholder="e.g. MyLab / SonoSite" autocomplete="off"></div>
+        <div class="f"><label>Probe / Freq. (MHz)</label><input id="pt-probe" placeholder="e.g. 7.5 MHz linear" autocomplete="off"></div>
+        <div class="f full"><label>Presenting Complaint</label><textarea id="pt-complaint" rows="2" placeholder="Main presenting complaint"></textarea></div>
       </div>
     </div>
-    <!-- ORGAN PANEL injected here -->
-    <div id="organ-panel"></div>
+    <div id="opanel"></div>
   </div>
-
-  <button id="gen-btn" onclick="generateReport()">📋 &nbsp;Generate Report</button>
+  <button id="gen" onclick="genReport()">📋 &nbsp;Generate Report</button>
 </div>
 
-<!-- REPORT VIEW -->
-<div id="report-view">
-  <div id="report-topbar">
-    <button id="rep-back" onclick="backToForm()">← Back</button>
-    <div style="flex:1;font-size:13px;font-weight:700;color:#fff;text-align:center">USG Report</div>
-    <button id="rep-print" onclick="window.print()">Print / PDF</button>
-  </div>
-  <div id="report-scroll">
-    <div class="rep-card">
-      <div class="rep-hdr-logo">
-        <div class="rep-hdr-title">Department of Veterinary Medicine</div>
-        <div class="rep-hdr-sub">College of Veterinary Science, Proddatur · SVVU, Andhra Pradesh</div>
-        <div class="rep-hdr-sub" style="margin-top:2px">Dr. K.S. Saikrishna M.V.Sc, Ph.D · Assistant Professor &amp; Head</div>
-        <div class="rep-hdr-line"></div>
-        <div class="rep-hdr-type">ULTRASONOGRAPHIC EXAMINATION REPORT</div>
-      </div>
-      <div class="pat-grid" id="rpt-patient"></div>
-      <div id="report-body"></div>
-      <div class="sig-row">
-        <div class="sig-f">Examining Clinician</div>
-        <div class="sig-f">Signature</div>
-        <div class="sig-f">Date</div>
-      </div>
-    </div>
-  </div>
+<div id="rep-bar">
+  <button class="rep-btn" onclick="backForm()">← Back</button>
+  <div style="flex:1;text-align:center;font-size:13px;font-weight:700;color:#fff">USG Report</div>
+  <button class="rep-btn2" onclick="window.print()">🖨 Print / PDF</button>
 </div>
+<div id="report"></div>
 
 <script>
-const ORGANS=[
- {id:"liver",label:"Liver",icon:"🫀",params:[
-  {id:"size",label:"Liver size",type:"sel",opts:["Normal","Hepatomegaly — mild","Hepatomegaly — moderate","Hepatomegaly — severe","Microhepatica"],
-   diff:{"Hepatomegaly — mild":["Reactive hepatopathy","Steroid hepatopathy","Early hepatitis","Hepatic lymphoma"],
-         "Hepatomegaly — moderate":["Hepatic lipidosis (cat)","Glycogen storage disease","Hepatic neoplasia","Right heart failure — congestion"],
-         "Hepatomegaly — severe":["Diffuse hepatic neoplasia","Severe hepatic lipidosis","Hepatic congestion — CHF","Hepatic torsion"],
-         "Microhepatica":["Hepatic cirrhosis","Portosystemic shunt","Chronic hepatic fibrosis"]}},
-  {id:"echo",label:"Echogenicity",type:"sel",opts:["Normal","Hyperechoic — diffuse","Hypoechoic — diffuse","Hyperechoic — focal","Hypoechoic — focal","Mixed echogenicity"],
-   diff:{"Hyperechoic — diffuse":["Hepatic lipidosis","Steroid hepatopathy","Vacuolar hepatopathy","Chronic fibrosis"],
-         "Hypoechoic — diffuse":["Acute hepatitis","Hepatic lymphoma","Hepatic congestion","Leptospirosis"],
-         "Hyperechoic — focal":["Nodular hyperplasia","Hepatic adenoma","Focal fibrosis","Granuloma"],
-         "Hypoechoic — focal":["Hepatic cyst","Abscess","Hepatocellular carcinoma","Metastatic neoplasia"],
-         "Mixed echogenicity":["Hepatic neoplasia","Hepatic abscess","Complex cyst","Haematoma"]}},
-  {id:"margins",label:"Margins",type:"sel",opts:["Smooth — regular","Irregular","Rounded","Nodular surface"]},
-  {id:"portal",label:"Portal vasculature",type:"sel",opts:["Normal","Dilated portal vein","Reduced flow","Portal hypertension pattern"]},
-  {id:"mass",label:"Focal mass / lesion",type:"sel",opts:["None","Single nodule < 1 cm","Single mass > 1 cm","Multiple nodules","Diffuse nodularity"],
-   diff:{"Single nodule < 1 cm":["Nodular hyperplasia","Hepatic adenoma","Early HCC","Granuloma"],
-         "Single mass > 1 cm":["Hepatocellular carcinoma","Cholangiocellular carcinoma","Abscess","Haematoma"],
-         "Multiple nodules":["Metastatic neoplasia","Nodular hyperplasia (old dog)","Multifocal abscesses","Fungal granulomas"],
-         "Diffuse nodularity":["Hepatic lymphoma","Diffuse neoplasia","Nodular regeneration","Mast cell tumour (cat)"]}},
-  {id:"biliary",label:"Biliary system",type:"sel",opts:["Normal","Bile duct dilation","Cholelithiasis","Biliary sludge","Mucocoele pattern","Cholecystitis signs"]},
-  {id:"span",label:"Liver span (cm)",type:"num",placeholder:"e.g. 11.5",hint:"Dog: 8–15 cm · Cat: 4–7 cm"},
+const OR=[
+ {id:"liver",lb:"Liver",ic:"🫀",ps:[
+  {id:"size",lb:"Size (vs Costal Arch)",t:"s",op:["Normal","Hepatomegaly — mild","Hepatomegaly — moderate","Hepatomegaly — severe","Microhepatica"],
+   df:{"Hepatomegaly — mild":["Reactive hepatopathy","Steroid hepatopathy","Early hepatitis","Hepatic lymphoma"],
+       "Hepatomegaly — moderate":["Hepatic lipidosis (cat)","Glycogen storage disease","Hepatic neoplasia","Right heart failure"],
+       "Hepatomegaly — severe":["Diffuse hepatic neoplasia","Severe hepatic lipidosis","Hepatic congestion — CHF"],
+       "Microhepatica":["Hepatic cirrhosis","Portosystemic shunt","Chronic hepatic fibrosis"]}},
+  {id:"margins",lb:"Margins",t:"s",op:["Smooth — regular","Irregular","Rounded","Nodular surface"]},
+  {id:"echo",lb:"Echogenicity (vs Spleen)",t:"s",op:["Normal — isoechoic","Hyperechoic — diffuse","Hypoechoic — diffuse","Hyperechoic — focal","Hypoechoic — focal","Mixed echogenicity"],
+   df:{"Hyperechoic — diffuse":["Hepatic lipidosis","Steroid hepatopathy","Vacuolar hepatopathy"],
+       "Hypoechoic — diffuse":["Acute hepatitis","Hepatic lymphoma","Leptospirosis"],
+       "Hyperechoic — focal":["Nodular hyperplasia","Hepatic adenoma","Granuloma"],
+       "Hypoechoic — focal":["Hepatic cyst","Abscess","Hepatocellular carcinoma","Metastatic neoplasia"],
+       "Mixed echogenicity":["Hepatic neoplasia","Hepatic abscess","Haematoma"]}},
+  {id:"texture",lb:"Echotexture",t:"s",op:["Homogeneous","Heterogeneous — diffuse","Heterogeneous — focal","Coarse / granular","Nodular"]},
+  {id:"portal",lb:"Portal Vein Dia.",t:"n",ph:"mm",ht:"Dog: 5–13 mm"},
+  {id:"mass",lb:"Focal Lesion / Mass",t:"s",op:["None","Single nodule < 1 cm","Single mass > 1 cm","Multiple nodules","Diffuse nodularity"],
+   df:{"Single nodule < 1 cm":["Nodular hyperplasia","Hepatic adenoma","Early HCC","Granuloma"],
+       "Single mass > 1 cm":["Hepatocellular carcinoma","Cholangiocellular carcinoma","Abscess","Haematoma"],
+       "Multiple nodules":["Metastatic neoplasia","Nodular hyperplasia (old dog)","Multifocal abscesses"],
+       "Diffuse nodularity":["Hepatic lymphoma","Diffuse neoplasia","Mast cell tumour (cat)"]}},
+  {id:"remarks",lb:"Remarks",t:"txt",ph:"Additional liver findings..."},
  ]},
- {id:"spleen",label:"Spleen",icon:"💧",params:[
-  {id:"size",label:"Spleen size",type:"sel",opts:["Normal","Splenomegaly — mild","Splenomegaly — moderate","Splenomegaly — severe","Reduced"],
-   diff:{"Splenomegaly — mild":["Reactive splenomegaly","Splenic congestion","Sedation artefact","Early neoplasia"],
-         "Splenomegaly — moderate":["Extramedullary haematopoiesis","Splenic lymphoma","Haemangiosarcoma","Immune-mediated disease"],
-         "Splenomegaly — severe":["Haemangiosarcoma","Mast cell tumour","Splenic lymphoma","Splenic torsion"]}},
-  {id:"echo",label:"Echogenicity",type:"sel",opts:["Normal","Hyperechoic — diffuse","Hypoechoic — diffuse","Focal hypoechoic lesion","Mixed / heterogeneous"],
-   diff:{"Hypoechoic — diffuse":["Splenic lymphoma","Acute congestion","Leukaemia"],
-         "Focal hypoechoic lesion":["Haematoma","Splenic cyst","Abscess","Haemangiosarcoma"],
-         "Mixed / heterogeneous":["Haemangiosarcoma","Splenic sarcoma","Complex haematoma"]}},
-  {id:"mass",label:"Focal lesion",type:"sel",opts:["None","Nodule < 1 cm","Mass 1–3 cm","Mass > 3 cm","Cavitary lesion"],
-   diff:{"Mass 1–3 cm":["Haemangiosarcoma","Haematoma","Mast cell tumour","Abscess"],
-         "Mass > 3 cm":["Haemangiosarcoma (dog)","Mast cell tumour (cat)","Sarcoma","Haematoma"],
-         "Cavitary lesion":["Haemangiosarcoma — cavitary","Abscess","Organised haematoma"]}},
-  {id:"effusion",label:"Peritoneal effusion",type:"sel",opts:["None","Trace","Moderate","Large — haemoperitoneum suspected"]},
+ {id:"gb",lb:"Gall Bladder",ic:"🟡",ps:[
+  {id:"size",lb:"GB Size",t:"s",op:["Normal","Distended","Small / contracted","Not visualised"]},
+  {id:"wall",lb:"Wall Thickness",t:"s",op:["Normal < 1 mm","Mild thickening 1–3 mm","Marked thickening > 3 mm"],
+   df:{"Mild thickening 1–3 mm":["Cholecystitis","Hypoalbuminaemia","Adjacent hepatitis"],
+       "Marked thickening > 3 mm":["Chronic cholecystitis","Biliary mucocoele","Neoplasia"]}},
+  {id:"content",lb:"GB Content",t:"s",op:["Anechoic — normal","Biliary sludge","Cholelithiasis","Mucocoele pattern","Hyperechoic non-shadowing"],
+   df:{"Biliary sludge":["Cholestasis","Anorexia / fasting","Haemolytic disease"],
+       "Cholelithiasis":["Choleliths — incidental","Cholelithiasis with obstruction"],
+       "Mucocoele pattern":["Biliary mucocoele — surgery indicated"]}},
+  {id:"cbd",lb:"CBD Diameter",t:"n",ph:"mm",ht:"Dog: < 3 mm; Cat: < 4 mm"},
+  {id:"remarks",lb:"Remarks",t:"txt",ph:"Additional biliary findings..."},
  ]},
- {id:"kidneys",label:"Kidneys",icon:"🫘",params:[
-  {id:"rl",label:"Right kidney length (cm)",type:"num",placeholder:"e.g. 6.5",hint:"Dog: 5–8 cm · Cat: 3–4.5 cm"},
-  {id:"ll",label:"Left kidney length (cm)",type:"num",placeholder:"e.g. 6.5",hint:"Dog: 5–8 cm · Cat: 3–4.5 cm"},
-  {id:"size",label:"Size assessment",type:"sel",opts:["Normal bilaterally","Renomegaly — bilateral","Renomegaly — unilateral","Small kidneys — bilateral","Asymmetric"],
-   diff:{"Renomegaly — bilateral":["Acute renal failure","Lymphoma (cat)","Polycystic kidney disease","FIP (cat)"],
-         "Renomegaly — unilateral":["Compensatory hypertrophy","Hydronephrosis","Renal neoplasia","Perinephric pseudocyst (cat)"],
-         "Small kidneys — bilateral":["Chronic renal failure","Renal dysplasia","End-stage glomerulonephritis"]}},
-  {id:"cortex",label:"Cortical echogenicity",type:"sel",opts:["Normal","Hyperechoic cortex","Hypoechoic cortex","Loss of corticomedullary distinction"],
-   diff:{"Hyperechoic cortex":["Chronic renal disease","Glomerulonephritis","Ethylene glycol toxicity","Lymphoma (cat)"],
-         "Hypoechoic cortex":["Acute nephritis","Oedema","Acute tubular necrosis"],
-         "Loss of corticomedullary distinction":["Advanced CRF","Diffuse infiltrative disease","Severe acute injury"]}},
-  {id:"pelvis",label:"Pelvis / collecting system",type:"sel",opts:["Normal","Mild pyelectasis","Moderate pyelectasis","Hydronephrosis","Pelvic calculi"]},
-  {id:"calculi",label:"Calculi",type:"sel",opts:["None","Calculi — right","Calculi — left","Calculi — bilateral","Nephrolithiasis with shadowing"]},
-  {id:"capsule",label:"Capsule / contour",type:"sel",opts:["Smooth","Irregular — focal","Irregular — diffuse","Subcapsular fluid (cat)"]},
+ {id:"spleen",lb:"Spleen",ic:"💧",ps:[
+  {id:"size",lb:"Size (Length × Thk.)",t:"n",ph:"cm × cm"},
+  {id:"sizecat",lb:"Size Assessment",t:"s",op:["Normal","Splenomegaly — mild","Splenomegaly — moderate","Splenomegaly — severe","Reduced"],
+   df:{"Splenomegaly — mild":["Reactive splenomegaly","Splenic congestion","Sedation artefact"],
+       "Splenomegaly — moderate":["Extramedullary haematopoiesis","Splenic lymphoma","Haemangiosarcoma"],
+       "Splenomegaly — severe":["Haemangiosarcoma","Mast cell tumour","Splenic lymphoma","Splenic torsion"]}},
+  {id:"margins",lb:"Margins",t:"s",op:["Smooth","Irregular","Rounded"]},
+  {id:"echo",lb:"Echogenicity (vs Liver)",t:"s",op:["Normal — isoechoic","Hyperechoic","Hypoechoic — diffuse","Focal hypoechoic lesion","Mixed / heterogeneous"],
+   df:{"Hypoechoic — diffuse":["Splenic lymphoma","Acute congestion","Leukaemia"],
+       "Focal hypoechoic lesion":["Haematoma","Splenic cyst","Abscess","Haemangiosarcoma"],
+       "Mixed / heterogeneous":["Haemangiosarcoma","Splenic sarcoma","Complex haematoma"]}},
+  {id:"mass",lb:"Focal Lesion",t:"s",op:["None","Nodule < 1 cm","Mass 1–3 cm","Mass > 3 cm","Cavitary lesion"],
+   df:{"Mass 1–3 cm":["Haemangiosarcoma","Haematoma","Mast cell tumour","Abscess"],
+       "Mass > 3 cm":["Haemangiosarcoma (dog)","Mast cell tumour (cat)","Sarcoma"],
+       "Cavitary lesion":["Haemangiosarcoma — cavitary","Abscess","Organised haematoma"]}},
+  {id:"remarks",lb:"Remarks",t:"txt",ph:"Additional splenic findings..."},
  ]},
- {id:"bladder",label:"Bladder",icon:"💦",params:[
-  {id:"fill",label:"Bladder fill",type:"sel",opts:["Well distended","Moderately filled","Poorly distended","Over-distended — obstruction"]},
-  {id:"wall",label:"Bladder wall",type:"sel",opts:["Normal","Diffuse thickening","Focal thickening","Irregular / nodular","Polypoid mass"],
-   diff:{"Diffuse thickening":["Bacterial cystitis","Haemorrhagic cystitis","Cyclophosphamide toxicity","Feline idiopathic cystitis"],
-         "Focal thickening":["Transitional cell carcinoma (TCC)","Inflammatory polyp","Granuloma"],
-         "Polypoid mass":["TCC","Benign polyp","Chronic focal inflammation"]}},
-  {id:"contents",label:"Contents",type:"sel",opts:["Clear — anechoic","Echogenic sediment","Urolithiasis","Blood clots","Gas in lumen"],
-   diff:{"Echogenic sediment":["Crystalluria","Haemorrhagic cystitis","Cellular debris"],
-         "Urolithiasis":["Struvite uroliths","Calcium oxalate uroliths","Urate uroliths","Cystine uroliths"],
-         "Blood clots":["Haemorrhagic cystitis","TCC bleeding","Coagulopathy","Trauma"]}},
-  {id:"trig",label:"Trigone",type:"sel",opts:["Normal","Mass at trigone — TCC suspected","Thickening at trigone","Calculi at trigone"]},
+ {id:"rkidney",lb:"Right Kidney",ic:"🫘",ps:[
+  {id:"length",lb:"Length (cm)",t:"n",ph:"cm",ht:"Dog: 5–8 cm · Cat: 3–4.5 cm"},
+  {id:"width",lb:"Width (cm)",t:"n",ph:"cm"},
+  {id:"cortex",lb:"Cortical Thickness",t:"n",ph:"mm"},
+  {id:"cmd",lb:"CM Definition",t:"s",op:["Normal — clear CMD","Reduced CMD","Loss of CMD"]},
+  {id:"echo",lb:"Cortical Echogenicity",t:"s",op:["Normal","Hyperechoic cortex","Hypoechoic cortex"],
+   df:{"Hyperechoic cortex":["Chronic renal disease","Glomerulonephritis","Ethylene glycol toxicity","Lymphoma (cat)"],
+       "Hypoechoic cortex":["Acute nephritis","Oedema","Acute tubular necrosis"]}},
+  {id:"pelvis",lb:"Pelvis Dilation",t:"s",op:["Normal","Mild pyelectasis","Moderate pyelectasis","Hydronephrosis","Pelvic calculi"]},
+  {id:"calculi",lb:"Calculi",t:"s",op:["None","Calculi present — shadowing","Nephrolithiasis"]},
+  {id:"remarks",lb:"Remarks",t:"txt",ph:"Additional right kidney findings..."},
  ]},
- {id:"pancreas",label:"Pancreas",icon:"〰️",params:[
-  {id:"viz",label:"Visualisation",type:"sel",opts:["Visualised — adequate","Partially visualised","Not visualised"]},
-  {id:"appear",label:"Appearance",type:"sel",opts:["Normal","Enlargement — hypoechoic","Hyperechoic / atrophic","Heterogeneous","Nodular / mass"],
-   diff:{"Enlargement — hypoechoic":["Acute pancreatitis","Pancreatic oedema","Pancreatic abscess","Pancreatic neoplasia"],
-         "Hyperechoic / atrophic":["Exocrine pancreatic insufficiency (EPI)","Chronic pancreatitis","Fibrosis"],
-         "Heterogeneous":["Chronic pancreatitis","Pancreatic pseudocyst","Abscess","Neoplasia"],
-         "Nodular / mass":["Pancreatic carcinoma","Insulinoma","Gastrinoma","Abscess"]}},
-  {id:"surr",label:"Peripancreatic fat",type:"sel",opts:["Normal","Hyperechoic fat — saponification","Peripancreatic effusion","Mesenteric steatitis"]},
-  {id:"duct",label:"Pancreatic duct",type:"sel",opts:["Not dilated","Mildly dilated","Markedly dilated — obstruction"]},
+ {id:"lkidney",lb:"Left Kidney",ic:"🫘",ps:[
+  {id:"length",lb:"Length (cm)",t:"n",ph:"cm",ht:"Dog: 5–8 cm · Cat: 3–4.5 cm"},
+  {id:"width",lb:"Width (cm)",t:"n",ph:"cm"},
+  {id:"cortex",lb:"Cortical Thickness",t:"n",ph:"mm"},
+  {id:"cmd",lb:"CM Definition",t:"s",op:["Normal — clear CMD","Reduced CMD","Loss of CMD"]},
+  {id:"echo",lb:"Cortical Echogenicity",t:"s",op:["Normal","Hyperechoic cortex","Hypoechoic cortex"],
+   df:{"Hyperechoic cortex":["Chronic renal disease","Glomerulonephritis","Ethylene glycol toxicity","Lymphoma (cat)"],
+       "Hypoechoic cortex":["Acute nephritis","Oedema","Acute tubular necrosis"]}},
+  {id:"pelvis",lb:"Pelvis Dilation",t:"s",op:["Normal","Mild pyelectasis","Moderate pyelectasis","Hydronephrosis","Pelvic calculi"]},
+  {id:"calculi",lb:"Calculi",t:"s",op:["None","Calculi present — shadowing","Nephrolithiasis"]},
+  {id:"remarks",lb:"Remarks",t:"txt",ph:"Additional left kidney findings..."},
  ]},
- {id:"gi",label:"GI Tract",icon:"🌀",params:[
-  {id:"wall",label:"Wall layering",type:"sel",opts:["Normal — 5 layers preserved","Loss of layering — focal","Loss of layering — diffuse","Thickened — diffuse","Thickened — focal"],
-   diff:{"Loss of layering — focal":["GI neoplasia","Focal granuloma","Intussusception wall"],
-         "Loss of layering — diffuse":["High-grade lymphoma","Diffuse infiltrative neoplasia","Severe IBD"],
-         "Thickened — diffuse":["IBD — lymphoplasmacytic","Small cell lymphoma (cat)","Protein-losing enteropathy"],
-         "Thickened — focal":["GI carcinoma","Lymphoma","Foreign body reaction"]}},
-  {id:"motility",label:"GI motility",type:"sel",opts:["Normal peristalsis","Reduced peristalsis","Absent peristalsis — ileus","Hypermotility"]},
-  {id:"fb",label:"Foreign body",type:"sel",opts:["None","Echogenic — distal shadowing","Non-shadowing echogenic material","Linear FB suspected (cat)","Gas pattern — obstruction"]},
-  {id:"intuss",label:"Intussusception",type:"sel",opts:["None","Target sign present","Corrugated bowel segment"]},
-  {id:"mucos",label:"Mucosa",type:"sel",opts:["Normal","Irregular mucosal surface","Mucosal ulceration suspected","Hyperechoic mucosal striping"]},
+ {id:"bladder",lb:"Urinary Bladder",ic:"💦",ps:[
+  {id:"fill",lb:"Distension",t:"s",op:["Well distended","Moderately filled","Poorly distended","Over-distended — obstruction"]},
+  {id:"wall",lb:"Wall Thickness",t:"s",op:["Normal < 2 mm","Mild thickening 2–4 mm","Marked thickening > 4 mm","Focal thickening","Polypoid mass"],
+   df:{"Mild thickening 2–4 mm":["Bacterial cystitis","Haemorrhagic cystitis","Feline idiopathic cystitis"],
+       "Marked thickening > 4 mm":["Chronic cystitis","Cyclophosphamide toxicity"],
+       "Focal thickening":["Transitional cell carcinoma (TCC)","Inflammatory polyp"],
+       "Polypoid mass":["TCC","Benign polyp"]}},
+  {id:"content",lb:"Content",t:"s",op:["Clear — anechoic","Echogenic sediment","Urolithiasis","Blood clots","Gas in lumen"],
+   df:{"Echogenic sediment":["Crystalluria","Haemorrhagic cystitis"],
+       "Urolithiasis":["Struvite uroliths","Calcium oxalate uroliths","Urate uroliths"],
+       "Blood clots":["Haemorrhagic cystitis","TCC bleeding","Coagulopathy"]}},
+  {id:"trigone",lb:"Trigone",t:"s",op:["Normal","Mass at trigone — TCC suspected","Thickening at trigone","Calculi at trigone"]},
+  {id:"remarks",lb:"Remarks",t:"txt",ph:"Additional bladder findings..."},
  ]},
- {id:"lymph",label:"Lymph Nodes",icon:"🔵",params:[
-  {id:"meso",label:"Mesenteric LN",type:"sel",opts:["Normal — not enlarged","Mildly enlarged < 1 cm","Moderately enlarged 1–2 cm","Severely enlarged > 2 cm","Multiple clusters"],
-   diff:{"Mildly enlarged < 1 cm":["Reactive lymphadenopathy","Early inflammation","Normal variant (cat)"],
-         "Moderately enlarged 1–2 cm":["Reactive — GI infection","Lymphoma","Mesenteric lymphadenitis"],
-         "Severely enlarged > 2 cm":["Multicentric lymphoma","Metastatic neoplasia","Fungal infection"],
-         "Multiple clusters":["Multicentric lymphoma","Disseminated metastasis","Systemic infection"]}},
-  {id:"echo",label:"LN echogenicity",type:"sel",opts:["Normal — hypoechoic rim","Uniformly hypoechoic — lymphoma","Hyperechoic centre","Mixed — necrotic"]},
-  {id:"sublumbar",label:"Sublumbar / iliac LN",type:"sel",opts:["Normal","Enlarged — reactive","Enlarged — neoplastic","Calcified — granuloma"]},
+ {id:"stomach",lb:"Stomach",ic:"🌀",ps:[
+  {id:"wall",lb:"Wall Thickness",t:"n",ph:"mm",ht:"Normal: < 5 mm (dog); < 4.5 mm (cat)"},
+  {id:"layer",lb:"Wall Layering",t:"s",op:["Normal — 5 layers preserved","Loss of layering — focal","Loss of layering — diffuse","Thickened — focal","Thickened — diffuse"],
+   df:{"Loss of layering — focal":["Gastric neoplasia","Focal granuloma"],
+       "Loss of layering — diffuse":["High-grade lymphoma","Diffuse infiltrative neoplasia"],
+       "Thickened — focal":["Gastric carcinoma","Lymphoma","Granuloma"]}},
+  {id:"content",lb:"Content",t:"s",op:["Normal — food / fluid","Empty","Fluid distension","Foreign body","Gas distension"]},
+  {id:"motility",lb:"Motility",t:"s",op:["Normal peristalsis","Reduced peristalsis","Absent peristalsis — ileus","Hypermotility"]},
+  {id:"pylorus",lb:"Pylorus",t:"s",op:["Normal","Pyloric thickening","Pyloric obstruction","Hypertrophic pyloric stenosis"]},
+  {id:"remarks",lb:"Remarks",t:"txt",ph:"Additional stomach findings..."},
  ]},
- {id:"adrenal",label:"Adrenals",icon:"▲",params:[
-  {id:"rw",label:"Right adrenal width (cm)",type:"num",placeholder:"e.g. 0.6",hint:"Dog: < 0.76 cm · Cat: < 0.46 cm"},
-  {id:"lw",label:"Left adrenal width (cm)",type:"num",placeholder:"e.g. 0.6",hint:"Dog: < 0.76 cm · Cat: < 0.46 cm"},
-  {id:"shape",label:"Shape / contour",type:"sel",opts:["Normal — bilobed","Rounded — bilateral","Rounded — unilateral","Nodule identified","Mineralisation"],
-   diff:{"Rounded — bilateral":["Pituitary-dependent hyperadrenocorticism (PDH)","Bilateral adrenal hyperplasia"],
-         "Rounded — unilateral":["Adrenal adenoma","Adrenal carcinoma","Phaeochromocytoma"],
-         "Nodule identified":["Adrenocortical adenoma","Adrenocortical carcinoma","Phaeochromocytoma","Incidentaloma"]}},
-  {id:"echo",label:"Echogenicity",type:"sel",opts:["Normal — uniform","Hyperechoic","Hypoechoic","Mixed — mineralisation","Cavitary"]},
+ {id:"si",lb:"Small Intestine",ic:"〰️",ps:[
+  {id:"wall",lb:"Wall Thickness",t:"n",ph:"mm",ht:"Dog: < 5 mm; Cat: < 2.5 mm (duodenum < 3 mm)"},
+  {id:"layer",lb:"Wall Layering",t:"s",op:["Normal — 5 layers preserved","Loss of layering — focal","Loss of layering — diffuse","Thickened — diffuse","Thickened — focal"],
+   df:{"Loss of layering — diffuse":["High-grade lymphoma","Diffuse infiltrative neoplasia","Severe IBD"],
+       "Thickened — diffuse":["IBD — lymphoplasmacytic","Small cell lymphoma (cat)","Protein-losing enteropathy"],
+       "Thickened — focal":["GI carcinoma","Lymphoma","Foreign body reaction"]}},
+  {id:"content",lb:"Content / Motility",t:"s",op:["Normal","Fluid distension — obstruction","Gas distension","Foreign body","Intussusception"]},
+  {id:"motility",lb:"Motility",t:"s",op:["Normal peristalsis","Reduced peristalsis","Absent peristalsis — ileus","Hypermotility"]},
+  {id:"intuss",lb:"Intussusception",t:"s",op:["None","Target sign present","Corrugated bowel segment"]},
+  {id:"remarks",lb:"Remarks",t:"txt",ph:"Additional SI findings..."},
  ]},
- {id:"repro",label:"Repro",icon:"⚕",params:[
-  {id:"sex",label:"Patient sex",type:"sel",opts:["Female — intact","Female — neutered","Male — intact","Male — neutered"]},
-  {id:"uterus",label:"Uterus (female)",type:"sel",opts:["NA","Normal","Enlarged — fluid-filled","Segmental enlargement","Mineralisation","Not visualised"],
-   diff:{"Enlarged — fluid-filled":["Pyometra (open / closed)","Mucometra","Hydrometra","Uterine neoplasia"],
-         "Segmental enlargement":["Segmental pyometra","CEH — cystic endometrial hyperplasia","Subinvolution"],
-         "Mineralisation":["Mummified foetuses","Uterine calcification — chronic CEH"]}},
-  {id:"prostate",label:"Prostate (male)",type:"sel",opts:["NA","Normal","Symmetric enlargement","Asymmetric — cavitation","Prostatic cysts","Mineralisation"],
-   diff:{"Symmetric enlargement":["Benign prostatic hyperplasia (BPH)","Early prostatitis"],
-         "Asymmetric — cavitation":["Prostatic abscess","Prostatic carcinoma","Paraprostatic cyst"],
-         "Prostatic cysts":["Paraprostatic retention cyst","Prostatic abscess","BPH with cystic change"]}},
+ {id:"li",lb:"Large Intestine",ic:"🔄",ps:[
+  {id:"wall",lb:"Wall Thickness",t:"n",ph:"mm",ht:"Normal: < 3 mm"},
+  {id:"layer",lb:"Wall Layering",t:"s",op:["Normal","Thickened — diffuse","Focal mass","Loss of layering"]},
+  {id:"content",lb:"Content",t:"s",op:["Normal faecal material","Fluid distension","Gas distension","Foreign material","Impaction"]},
+  {id:"haustration",lb:"Haustration",t:"s",op:["Normal","Reduced","Absent"]},
+  {id:"mass",lb:"Mass / Lesion",t:"s",op:["None","Polyp","Mass — colonic carcinoma suspected","Intussusception"]},
+  {id:"remarks",lb:"Remarks",t:"txt",ph:"Additional large intestine findings..."},
  ]},
- {id:"effusion",label:"Effusion",icon:"🌊",params:[
-  {id:"peri",label:"Peritoneal effusion",type:"sel",opts:["None","Trace — dependent areas","Small — moderate","Large — generalised","Echogenic — haemoabdomen"],
-   diff:{"Small — moderate":["Hypoalbuminaemia","Early peritonitis","Right-sided CHF","Neoplasia"],
-         "Large — generalised":["Severe hypoalbuminaemia","FIP peritonitis (cat)","Uroabdomen","Chylous effusion","Neoplasia"],
-         "Echogenic — haemoabdomen":["Haemangiosarcoma rupture","Splenic rupture","Anticoagulant rodenticide","Trauma"]}},
-  {id:"gas",label:"Free peritoneal gas",type:"sel",opts:["Absent","Present — GI perforation suspected"]},
-  {id:"misc",label:"Additional finding",type:"sel",opts:["None","Mesenteric mineralisation","Diaphragmatic hernia suspected","Ectopic tissue","Steatitis"]},
-  {id:"quality",label:"Study quality",type:"sel",opts:["Diagnostic — complete","Diagnostic — adequate","Limited — gas obscuring","Limited — patient cooperation","Non-diagnostic"]},
+ {id:"pancreas",lb:"Pancreas",ic:"〰",ps:[
+  {id:"viz",lb:"Visualisation",t:"s",op:["Visualised — adequate","Partially visualised","Not visualised"]},
+  {id:"rl",lb:"Right Limb Thickness",t:"n",ph:"mm",ht:"Dog: < 10 mm; Cat: < 6 mm"},
+  {id:"ll",lb:"Left Limb Thickness",t:"n",ph:"mm"},
+  {id:"echo",lb:"Echogenicity",t:"s",op:["Normal — isoechoic to mesenteric fat","Hypoechoic — diffuse","Hyperechoic — atrophic","Heterogeneous","Nodular / mass"],
+   df:{"Hypoechoic — diffuse":["Acute pancreatitis","Pancreatic oedema","Abscess"],
+       "Hyperechoic — atrophic":["EPI — exocrine pancreatic insufficiency","Chronic pancreatitis"],
+       "Heterogeneous":["Chronic pancreatitis","Pancreatic pseudocyst","Neoplasia"],
+       "Nodular / mass":["Pancreatic carcinoma","Insulinoma","Gastrinoma"]}},
+  {id:"fat",lb:"Peripancreatic Fat / Fluid",t:"s",op:["Normal","Hyperechoic fat — saponification","Peripancreatic effusion","Mesenteric steatitis"]},
+  {id:"duct",lb:"Pancreatic Duct",t:"s",op:["Not dilated","Mildly dilated","Markedly dilated — obstruction"]},
+  {id:"remarks",lb:"Remarks",t:"txt",ph:"Additional pancreas findings..."},
+ ]},
+ {id:"adrenal",lb:"Adrenals",ic:"▲",ps:[
+  {id:"rsize",lb:"Right Adrenal L × W (cm)",t:"n",ph:"cm",ht:"Dog: W < 0.76 cm · Cat: W < 0.46 cm"},
+  {id:"lsize",lb:"Left Adrenal L × W (cm)",t:"n",ph:"cm"},
+  {id:"shape",lb:"Shape",t:"s",op:["Normal — bilobed peanut shape","Rounded — bilateral","Rounded — unilateral R","Rounded — unilateral L","Nodule identified","Mineralisation"],
+   df:{"Rounded — bilateral":["PDH — pituitary-dependent hyperadrenocorticism","Bilateral adrenal hyperplasia"],
+       "Rounded — unilateral R":["Adrenal adenoma","Adrenal carcinoma","Phaeochromocytoma"],
+       "Rounded — unilateral L":["Adrenal adenoma","Adrenal carcinoma","Phaeochromocytoma"],
+       "Nodule identified":["Adrenocortical adenoma","Adrenocortical carcinoma","Phaeochromocytoma"]}},
+  {id:"echo",lb:"Echogenicity",t:"s",op:["Normal — uniform","Hyperechoic","Hypoechoic","Mixed — mineralisation","Cavitary"]},
+  {id:"remarks",lb:"Remarks",t:"txt",ph:"Additional adrenal findings..."},
+ ]},
+ {id:"lymph",lb:"GI Lymph Nodes",ic:"🔵",ps:[
+  {id:"size",lb:"Size — Largest (cm)",t:"n",ph:"cm",ht:"Dog: < 1 cm; Cat: < 0.5 cm"},
+  {id:"number",lb:"No. Enlarged",t:"n",ph:"number"},
+  {id:"shape",lb:"Shape",t:"s",op:["Normal — elongated","Rounded — reactive","Spherical — neoplastic pattern"]},
+  {id:"echo",lb:"Echogenicity",t:"s",op:["Normal — hypoechoic rim","Uniformly hypoechoic — lymphoma pattern","Hyperechoic centre","Mixed — necrotic"],
+   df:{"Uniformly hypoechoic — lymphoma pattern":["Multicentric lymphoma","Metastatic neoplasia"],
+       "Mixed — necrotic":["Necrotic lymphoma","Metastatic neoplasia with necrosis"]}},
+  {id:"meso",lb:"Mesenteric LN Assessment",t:"s",op:["Normal — not enlarged","Mildly enlarged < 1 cm","Moderately enlarged 1–2 cm","Severely enlarged > 2 cm"],
+   df:{"Moderately enlarged 1–2 cm":["Reactive — GI infection","Lymphoma","Mesenteric lymphadenitis"],
+       "Severely enlarged > 2 cm":["Multicentric lymphoma","Metastatic neoplasia","Fungal infection"]}},
+  {id:"remarks",lb:"Remarks",t:"txt",ph:"Additional lymph node findings..."},
+ ]},
+ {id:"repro",lb:"Uterus / Prostate",ic:"⚕",ps:[
+  {id:"sex",lb:"Patient Sex",t:"s",op:["Female — intact","Female — neutered","Male — intact","Male — neutered"]},
+  {id:"uterus",lb:"Uterine Horn Diameter",t:"n",ph:"mm",ht:"Normal: < 10 mm"},
+  {id:"ucontent",lb:"Uterine Content / Pattern",t:"s",op:["NA","Normal — not visible / thin","Fluid-filled — pyometra suspected","Segmental fluid — CEH","Foetuses — gravid","Mineralisation"],
+   df:{"Fluid-filled — pyometra suspected":["Pyometra (open / closed)","Mucometra","Hydrometra"],
+       "Segmental fluid — CEH":["CEH — cystic endometrial hyperplasia","Segmental pyometra"]}},
+  {id:"prostate",lb:"Prostate Size (L × W × H)",t:"n",ph:"cm"},
+  {id:"prosecho",lb:"Prostate Symmetry / Echotexture",t:"s",op:["NA","Normal — symmetric homogeneous","Symmetric enlargement","Asymmetric — cavitation","Cystic changes","Mineralisation"],
+   df:{"Symmetric enlargement":["BPH — benign prostatic hyperplasia","Early prostatitis"],
+       "Asymmetric — cavitation":["Prostatic abscess","Prostatic carcinoma","Paraprostatic cyst"],
+       "Cystic changes":["Paraprostatic retention cyst","Prostatic abscess","BPH with cystic change"]}},
+  {id:"remarks",lb:"Remarks",t:"txt",ph:"Additional reproductive findings..."},
+ ]},
+ {id:"effusion",lb:"Peritoneum / Fluid",ic:"🌊",ps:[
+  {id:"fluid",lb:"Free Fluid Present",t:"s",op:["None","Trace — dependent areas","Mild","Moderate","Severe — generalised","Echogenic — haemoabdomen"],
+   df:{"Mild":["Hypoalbuminaemia","Early peritonitis","Right-sided CHF"],
+       "Moderate":["Hypoalbuminaemia","Peritonitis","Neoplasia with effusion"],
+       "Severe — generalised":["FIP peritonitis (cat)","Uroabdomen","Chylous effusion","Neoplasia"],
+       "Echogenic — haemoabdomen":["Haemangiosarcoma rupture","Splenic rupture","Anticoagulant rodenticide","Trauma"]}},
+  {id:"character",lb:"Fluid Character",t:"s",op:["NA","Anechoic — transudate","Mildly echogenic — modified transudate","Echogenic — exudate / blood","Fibrinous strands present"]},
+  {id:"gas",lb:"Free Peritoneal Gas",t:"s",op:["Absent","Present — GI perforation suspected"]},
+  {id:"quality",lb:"Study Quality",t:"s",op:["Diagnostic — complete","Diagnostic — adequate","Limited — gas obscuring","Limited — patient cooperation","Non-diagnostic"]},
+  {id:"remarks",lb:"Remarks",t:"txt",ph:"Additional peritoneal findings, significant masses..."},
  ]}
 ];
 
-let cur=0;
-let data={};
-ORGANS.forEach(o=>data[o.id]={});
+const NV=new Set(["Normal","None","Absent","NA","Not visualised","Normal bilaterally","Well distended",
+ "Normal peristalsis","Normal — 5 layers preserved","Normal — not enlarged","Not dilated","Smooth",
+ "Clear — anechoic","Visualised — adequate","Normal — bilobed peanut shape","Normal — uniform",
+ "Diagnostic — complete","Diagnostic — adequate","Normal — hypoechoic rim","Smooth — regular",
+ "Normal — isoechoic","Normal — isoechoic to mesenteric fat","Female — neutered","Male — neutered",
+ "Normal — clear CMD","Normal faecal material","Homogeneous","Normal — not visible / thin",
+ "Normal < 1 mm","Normal < 2 mm","None","Anechoic — normal","Normal peristalsis","Normal — elongated",
+ "Normal — 5 layers preserved","NA","Normal","Absent"]);
+const isN=v=>!v||NV.has(v)||v.startsWith("Normal")||v==="None"||v==="NA"||v==="Absent"||v==="Not visualised";
 
-const NORMAL_VALS=new Set(["Normal","None","Absent","NA","Not visualised","Normal bilaterally",
- "Well distended","Normal peristalsis","Normal — 5 layers preserved","Normal — not enlarged",
- "Not gravid","Not dilated","Smooth","Clear — anechoic","Visualised — adequate",
- "Normal — bilobed","Normal — uniform","Diagnostic — complete","Diagnostic — adequate",
- "Normal — hypoechoic rim","Smooth — regular","Normal bilaterally","Female — neutered",
- "Male — neutered","No","Absent"]);
-
-function isNormal(v){return !v||NORMAL_VALS.has(v)||v.startsWith("Normal")||v==="None"||v==="NA"||v==="Absent"}
+let cur=0,D={};
+OR.forEach(o=>D[o.id]={});
 
 function buildTabs(){
-  const tb=document.getElementById("tab-bar");
-  tb.innerHTML=ORGANS.map((o,i)=>{
-    const done=data[o.id]._done;
-    const active=i===cur;
-    return `<div class="tab ${active?"active":""} ${done?"done":""}" onclick="go(${i})">${o.icon} ${o.label}${done?" ✓":""}</div>`;
-  }).join("");
-  // scroll active tab into view
-  setTimeout(()=>{
-    const tabs=tb.querySelectorAll(".tab");
-    if(tabs[cur]) tabs[cur].scrollIntoView({inline:"center",behavior:"smooth"});
-  },50);
+  document.getElementById("tabs").innerHTML=OR.map((o,i)=>`
+    <div class="tab ${i===cur?"active":""} ${D[o.id]._done?"done":""}" onclick="go(${i})">
+      ${o.ic} ${o.lb}${D[o.id]._done?" ✓":""}
+    </div>`).join("");
+  setTimeout(()=>{const t=document.querySelectorAll(".tab");if(t[cur])t[cur].scrollIntoView({inline:"center",behavior:"smooth"});},50);
 }
 
-function save(){
-  const o=ORGANS[cur];
-  const d={...data[o.id]};
-  o.params.forEach(p=>{
-    const el=document.getElementById(`f_${o.id}_${p.id}`);
-    if(el) d[p.id]=el.value;
+function sv(){
+  const o=OR[cur];
+  o.ps.forEach(p=>{
+    const el=document.getElementById(`f${o.id}${p.id}`);
+    if(el) D[o.id][p.id]=el.value;
   });
-  data[o.id]=d;
 }
 
-function go(idx){save();cur=idx;buildTabs();renderOrgan();}
+function go(i){sv();cur=i;buildTabs();renderO();document.getElementById("content").scrollTop=0;}
 
-function done(){
-  save();
-  data[ORGANS[cur].id]._done=true;
-  if(cur<ORGANS.length-1) cur++;
-  buildTabs();renderOrgan();
-  document.getElementById("body").scrollTo({top:0,behavior:"smooth"});
+function doneO(){
+  sv();D[OR[cur].id]._done=true;
+  if(cur<OR.length-1) cur++;
+  buildTabs();renderO();
+  document.getElementById("content").scrollTo({top:0,behavior:"smooth"});
 }
 
-function clearOrgan(){data[ORGANS[cur].id]={};renderOrgan();}
+function clrO(){D[OR[cur].id]={};renderO();}
 
-function renderOrgan(){
-  const o=ORGANS[cur];
-  const sv=data[o.id]||{};
-  document.getElementById("organ-panel").innerHTML=`
+function renderO(){
+  const o=OR[cur];const sv2=D[o.id]||{};
+  document.getElementById("opanel").innerHTML=`
     <div class="card">
-      <div class="card-head">
-        <div class="card-icon">${o.icon}</div>
-        <div><div class="card-label">${o.label}</div>
-        <div class="card-sub">Tap fields to record findings</div></div>
+      <div class="organ-head">
+        <div class="organ-ico">${o.ic}</div>
+        <div><div class="organ-lbl">${o.lb}</div>
+        <div class="organ-sub">Tap fields to record findings</div></div>
       </div>
-      <div class="fg">
-        ${o.params.map(p=>renderField(o.id,p,sv)).join("")}
-      </div>
-      <div class="btn-row">
-        ${cur>0?`<button class="btn btn-sec" onclick="go(${cur-1})">← Back</button>`:""}
-        <button class="btn btn-sec" onclick="clearOrgan()">↺</button>
-        <button class="btn btn-pri" onclick="done()">Save &amp; Next →</button>
+      <div class="fg">${o.ps.map(p=>rF(o.id,p,sv2)).join("")}</div>
+      <div class="btns">
+        ${cur>0?`<button class="btn btn-s" onclick="go(${cur-1})">← Back</button>`:""}
+        <button class="btn btn-s" onclick="clrO()">↺ Clear</button>
+        <button class="btn btn-p" onclick="doneO()">Save &amp; Next →</button>
       </div>
     </div>`;
 }
 
-function renderField(oid,p,sv){
-  const v=sv[p.id]||"";
-  const full=p.full?"full":"";
-  if(p.type==="num") return `<div class="f ${full}">
-    <label>${p.label}</label>
-    <input type="number" step="0.1" inputmode="decimal" id="f_${oid}_${p.id}"
-      placeholder="${p.placeholder||""}" value="${v}">
-    ${p.hint?`<div class="hint">${p.hint}</div>`:""}
+function rF(oid,p,sv2){
+  const v=sv2[p.id]||"";
+  const full=(p.t==="txt")?"full":"";
+  if(p.t==="txt") return `<div class="f full"><label>${p.lb}</label>
+    <textarea id="f${oid}${p.id}" rows="2" placeholder="${p.ph||""}">${v}</textarea></div>`;
+  if(p.t==="n") return `<div class="f ${full}"><label>${p.lb}</label>
+    <input type="number" step="0.1" inputmode="decimal" id="f${oid}${p.id}" placeholder="${p.ph||""}" value="${v}">
+    ${p.ht?`<div class="hint">${p.ht}</div>`:""}
   </div>`;
-  const opts=p.opts.map(o=>`<option${v===o?" selected":""}>${o}</option>`).join("");
-  return `<div class="f ${full}">
-    <label>${p.label}</label>
-    <select id="f_${oid}_${p.id}">${opts}</select>
-    ${p.hint?`<div class="hint">${p.hint}</div>`:""}
+  const ops=p.op.map(o=>`<option${v===o?" selected":""}>${o}</option>`).join("");
+  return `<div class="f ${full}"><label>${p.lb}</label>
+    <select id="f${oid}${p.id}">${ops}</select>
+    ${p.ht?`<div class="hint">${p.ht}</div>`:""}
   </div>`;
 }
 
-function generateReport(){
-  save();
-  const name=document.getElementById("pt-name").value||"—";
-  const sp=document.getElementById("pt-species").value;
-  const breed=document.getElementById("pt-breed").value||"—";
-  const age=document.getElementById("pt-age").value||"—";
-  const owner=document.getElementById("pt-owner").value||"—";
-  const date=document.getElementById("pt-date").value||new Date().toLocaleDateString("en-IN");
-  const ref=document.getElementById("pt-ref").value||"—";
-  const machine=document.getElementById("pt-machine").value||"—";
+function genReport(){
+  sv();
+  const g=id=>document.getElementById(id)?.value||"—";
+  const name=g("pt-name"),sp=g("pt-sp"),breed=g("pt-breed"),age=g("pt-age"),
+    wt=g("pt-wt"),owner=g("pt-owner"),contact=g("pt-contact"),ref=g("pt-ref"),
+    complaint=g("pt-complaint"),fast=g("pt-fast"),sed=g("pt-sed"),
+    mach=g("pt-mach"),probe=g("pt-probe"),caseNo=g("pt-case"),date=g("pt-date");
 
-  document.getElementById("rpt-patient").innerHTML=`
-    <div class="pat-f"><span>Patient</span><span>${name}</span></div>
-    <div class="pat-f"><span>Species / Breed</span><span>${sp} · ${breed}</span></div>
-    <div class="pat-f"><span>Age / Sex</span><span>${age}</span></div>
-    <div class="pat-f"><span>Owner</span><span>${owner}</span></div>
-    <div class="pat-f"><span>Date</span><span>${date}</span></div>
-    <div class="pat-f"><span>Ref. Doctor</span><span>${ref}</span></div>
-    <div class="pat-f"><span>Machine / Probe</span><span>${machine}</span></div>
-    <div class="pat-f"><span>Clinician</span><span>Dr. K.S. Saikrishna M.V.Sc, Ph.D</span></div>`;
+  // ── LETTERHEAD ──
+  let html=`<div class="rpage">
+    <div class="lhead">
+      <div class="lhead-title">Abdominal Ultrasound Report</div>
+      <div class="lhead-sub">Dr. K.S. Saikrishna M.V.Sc, Ph.D.</div>
+      <div class="lhead-addr">Assistant Professor &amp; Head, Department of Veterinary Medicine</div>
+      <div class="lhead-addr">College of Veterinary Science, Proddatur — SVVU, Andhra Pradesh</div>
+      <div class="lhead-line"></div>
+      <div class="lhead-rtype">Dog / Cat — Organ-by-Organ Clinical Record</div>
+    </div>
 
-  let html="";let allD=[];let hasAbn=false;
+    <div class="pat-box">
+      <div class="pat-box-title">Patient &amp; Owner Details</div>
+      <div class="pat-grid">
+        <div class="pat-row"><div class="pat-lbl">Case No.</div><div class="pat-val">${caseNo}</div></div>
+        <div class="pat-row"><div class="pat-lbl">Date</div><div class="pat-val">${date}</div></div>
+        <div class="pat-row"><div class="pat-lbl">Patient Name</div><div class="pat-val">${name}</div></div>
+        <div class="pat-row"><div class="pat-lbl">Species / Breed</div><div class="pat-val">${sp} / ${breed}</div></div>
+        <div class="pat-row"><div class="pat-lbl">Age / Sex</div><div class="pat-val">${age}</div></div>
+        <div class="pat-row"><div class="pat-lbl">Body Wt.</div><div class="pat-val">${wt} kg</div></div>
+        <div class="pat-row"><div class="pat-lbl">Owner Name</div><div class="pat-val">${owner}</div></div>
+        <div class="pat-row"><div class="pat-lbl">Contact No.</div><div class="pat-val">${contact}</div></div>
+        <div class="pat-row"><div class="pat-lbl">Ref. Clinician</div><div class="pat-val">${ref}</div></div>
+        <div class="pat-row"><div class="pat-lbl">Complaint</div><div class="pat-val">${complaint}</div></div>
+        <div class="pat-row"><div class="pat-lbl">Fasting</div><div class="pat-val">${fast}</div></div>
+        <div class="pat-row"><div class="pat-lbl">Sedation</div><div class="pat-val">${sed}</div></div>
+        <div class="pat-row"><div class="pat-lbl">Machine</div><div class="pat-val">${mach}</div></div>
+        <div class="pat-row"><div class="pat-lbl">Probe / Freq.</div><div class="pat-val">${probe}</div></div>
+      </div>
+    </div>
 
-  ORGANS.forEach(organ=>{
-    const d=data[organ.id];
-    const keys=Object.keys(d).filter(k=>k!=="id"&&k!=="_done"&&d[k]);
-    if(!keys.length) return;
-    let findings=[];let diffs=[];
-    organ.params.forEach(p=>{
-      const v=d[p.id];if(!v) return;
-      const abn=!isNormal(v);
+    <div style="font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;padding:4px 0;border-bottom:2px solid var(--navy)">
+      Organ-by-Organ Findings
+    </div>
+
+    <table class="organ-table">
+      <tr>
+        <th style="width:13%">Organ</th>
+        <th style="width:28%">Parameters</th>
+        <th style="width:35%">Findings</th>
+        <th style="width:24%">Remarks</th>
+      </tr>`;
+
+  let allDiffs=[];
+  let hasAbn=false;
+  let lesionRows="";
+
+  OR.forEach(organ=>{
+    const d=D[organ.id];
+    const hasData=organ.ps.some(p=>d[p.id]);
+    if(!hasData) return;
+
+    let params="";
+    let findings="";
+    let remarks="";
+    let diffs=[];
+
+    organ.ps.forEach(p=>{
+      const v=d[p.id];
+      if(!v) return;
+      if(p.t==="txt"){
+        if(v.trim()) remarks+=v;
+        return;
+      }
+      const abn=!isN(v);
       if(abn) hasAbn=true;
-      findings.push({label:p.label,val:v,abn,isNum:p.type==="num"});
-      if(p.diff&&p.diff[v]){diffs=[...diffs,...p.diff[v]];allD=[...allD,...p.diff[v]];}
+      params+=`<div style="margin-bottom:2px"><span style="color:var(--mgray);font-size:10px">${p.lb}:</span> <span style="font-weight:600">${v}${p.t==="n"?" "+(p.ph||""):""}}</span></div>`;
+      if(abn){
+        findings+=`<span class="abn-tag">${v}</span> `;
+      } else {
+        findings+=`<span class="norm-tag">WNL</span> `;
+      }
+      if(p.df&&p.df[v]){
+        diffs=[...diffs,...p.df[v]];
+        allDiffs=[...allDiffs,...p.df[v]];
+        // add to lesion summary if mass/significant
+        if(v.includes("mass")||v.includes("Mass")||v.includes("nodule")||v.includes("Nodule")||v.includes("carcinoma")||v.includes("Carcinoma")){
+          lesionRows+=`<tr><td>${organ.lb}</td><td>${p.lb}</td><td>${v}</td><td>${p.t==="n"?v+" cm":"—"}</td><td>${diffs.slice(-3).join(", ")}</td></tr>`;
+        }
+      }
     });
-    if(!findings.length) return;
-    html+=`<div class="rep-section">
-      <div class="rs-hdr"><div class="rs-ico">${organ.icon}</div>
-        <div class="rs-title">${organ.label}</div></div>
-      ${findings.map(f=>`<div class="finding">
-        <div class="f-lbl">${f.label}</div>
-        <div class="f-val ${f.abn&&!f.isNum?"abn":""}">${f.val}${f.isNum?" cm":""}</div>
-      </div>`).join("")}
-      ${diffs.length?`<div class="diff-blk">
-        <div class="diff-lbl">⚠ Differentials</div>
-        <div class="diff-chips">${[...new Set(diffs)].map(d=>`<div class="diff-chip">${d}</div>`).join("")}
-        </div></div>`:""}
-    </div>`;
+
+    if(!params&&!findings) return;
+
+    html+=`<tr>
+      <td><div class="organ-name">${organ.ic} ${organ.lb}</div></td>
+      <td class="param-val">${params}</td>
+      <td class="findings-cell">${findings||'<span class="norm-tag">WNL</span>'}</td>
+      <td class="remarks-cell">${remarks||"—"}</td>
+    </tr>`;
   });
 
-  if(!html){
-    html=`<div style="text-align:center;padding:20px;color:var(--mgray);font-size:13px">No findings recorded yet.</div>`;
-  }
-
-  const uniq=[...new Set(allD)];
-  if(hasAbn&&uniq.length){
-    html+=`<div class="overall">
-      <div class="ov-title">Overall Diagnostic Considerations</div>
-      <div class="ov-chips">${uniq.slice(0,14).map(d=>`<div class="ov-chip">${d}</div>`).join("")}</div>
-      <div class="ov-note">Clinical correlation with haematology, biochemistry, urinalysis, and histopathology recommended. USG findings should not be interpreted in isolation.</div>
+  html+=`</table>
+    <div style="font-size:9px;color:var(--mgray);margin-bottom:10px;font-style:italic">
+      WNL = Within Normal Limits. Correlate with haematology, biochemistry &amp; radiography before finalising impression.
     </div>`;
-  } else if(!hasAbn&&html.includes("rep-section")){
-    html+=`<div class="norm-blk">✓ No significant ultrasonographic abnormalities detected</div>`;
+
+  // SIGNIFICANT LESIONS TABLE
+  if(lesionRows){
+    html+=`<div style="font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;padding:4px 0;border-bottom:2px solid var(--navy)">Significant Lesions / Masses — Summary</div>
+    <table class="organ-table" style="margin-bottom:12px">
+      <tr><th>Organ</th><th>Location</th><th>Nature</th><th>Size</th><th>Suspected Diagnosis</th></tr>
+      ${lesionRows}
+    </table>`;
   }
 
-  document.getElementById("report-body").innerHTML=html;
-  document.getElementById("shell").style.display="none";
-  const rv=document.getElementById("report-view");
-  rv.classList.add("visible");
-  document.getElementById("report-scroll").scrollTo({top:0});
+  // DIFFERENTIALS TABLE
+  if(allDiffs.length){
+    const uniq=[...new Set(allDiffs)];
+    html+=`<div style="font-size:11px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;padding:4px 0;border-bottom:2px solid var(--orange)">Differential Diagnoses</div>
+    <table class="diff-table" style="margin-bottom:12px">
+      <tr><th>#</th><th>Differential Diagnosis</th></tr>
+      ${uniq.map((d,i)=>`<tr><td style="font-weight:700;color:var(--navy);width:30px">${i+1}</td><td>${d}</td></tr>`).join("")}
+    </table>`;
+  }
+
+  // IMPRESSION
+  html+=`<div class="imp-box">
+    <div class="imp-title">Overall Impression / Diagnosis</div>
+    <div class="imp-body">${hasAbn?"Ultrasonographic examination reveals the following significant findings. Clinical correlation with haematology, biochemistry, and histopathology recommended for definitive diagnosis.":"No significant ultrasonographic abnormalities detected. All organs within normal limits."}</div>
+  </div>
+
+  <div class="rec-box">
+    <div class="rec-title">Recommendations / Follow-up Imaging</div>
+    <div class="rec-body"></div>
+  </div>
+
+  <div class="sig-section">
+    <div class="sig-block">
+      <div class="sig-line"></div>
+      <div class="sig-label">Sonographer</div>
+    </div>
+    <div class="sig-block">
+      <div class="sig-line"></div>
+      <div class="sig-label">Reporting Clinician</div>
+      <div class="sig-name">Dr. K.S. Saikrishna M.V.Sc, Ph.D.</div>
+    </div>
+    <div class="sig-block">
+      <div class="sig-line"></div>
+      <div class="sig-label">Signature &amp; Seal</div>
+    </div>
+  </div>
+
+  <div class="rep-footer">
+    Dr. K.S. Saikrishna, M.V.Sc, Ph.D. | Dept. of Veterinary Medicine, College of Veterinary Science, Proddatur (SVVU) | Dog &amp; Cat Abdominal USG Report v2.0
+  </div>
+</div>`;
+
+  document.getElementById("report").innerHTML=html;
+  document.getElementById("app").style.display="none";
+  const rb=document.getElementById("rep-bar");
+  rb.style.display="flex";
+  document.getElementById("report").style.display="block";
+  window.scrollTo({top:0});
 }
 
-function backToForm(){
-  document.getElementById("report-view").classList.remove("visible");
-  document.getElementById("shell").style.display="flex";
+function backForm(){
+  document.getElementById("report").style.display="none";
+  document.getElementById("rep-bar").style.display="none";
+  document.getElementById("app").style.display="flex";
 }
 
 function resetAll(){
-  ORGANS.forEach(o=>data[o.id]={});
-  cur=0;
-  ["pt-name","pt-breed","pt-age","pt-owner","pt-ref","pt-machine"].forEach(id=>{
+  OR.forEach(o=>D[o.id]={});cur=0;
+  ["pt-name","pt-breed","pt-age","pt-owner","pt-contact","pt-ref","pt-mach","pt-probe","pt-case","pt-complaint","pt-wt"].forEach(id=>{
     const el=document.getElementById(id);if(el) el.value="";
   });
   document.getElementById("pt-date").valueAsDate=new Date();
-  buildTabs();renderOrgan();
-  document.getElementById("body").scrollTo({top:0});
+  buildTabs();renderO();
 }
 
-// init
 document.getElementById("pt-date").valueAsDate=new Date();
-buildTabs();
-renderOrgan();
+buildTabs();renderO();
 </script>
+
 <script>
 if("serviceWorker" in navigator){
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js")
-      .then(() => console.log("SW registered"))
-      .catch(e => console.log("SW error", e));
+  window.addEventListener("load",()=>{
+    navigator.serviceWorker.register("sw.js").catch(e=>console.log(e));
   });
 }
 </script>
