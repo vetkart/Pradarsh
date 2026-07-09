@@ -446,6 +446,12 @@ function sv(){
   });
 }
 
+function setViz(val){
+  sv();
+  D[OR[cur].id]._viz=val;
+  renderO();
+}
+
 function go(i){sv();cur=i;buildTabs();renderO();document.getElementById("content").scrollTop=0;}
 
 function doneO(){
@@ -459,19 +465,26 @@ function clrO(){D[OR[cur].id]={};renderO();}
 
 function renderO(){
   const o=OR[cur];const sv2=D[o.id]||{};
+  const viz=sv2._viz||"Visualised";
+  const isNV=viz==="Not Visualised";
   document.getElementById("opanel").innerHTML=`
     <div class="card">
       <div class="organ-head">
         <div class="organ-ico">${o.ic}</div>
-        <div><div class="organ-lbl">${o.lb}</div>
+        <div style="flex:1"><div class="organ-lbl">${o.lb}</div>
         <div class="organ-sub">Tap fields · Record findings</div></div>
+        <div style="display:flex;gap:6px;flex-shrink:0">
+          <button onclick="setViz('Visualised')" style="padding:5px 10px;border-radius:8px;border:1px solid var(--teal);font-size:11px;font-weight:600;cursor:pointer;background:${viz==='Visualised'?'var(--teal)':'transparent'};color:${viz==='Visualised'?'white':'var(--teal)'}">✓ Vis</button>
+          <button onclick="setViz('Not Visualised')" style="padding:5px 10px;border-radius:8px;border:1px solid var(--red);font-size:11px;font-weight:600;cursor:pointer;background:${viz==='Not Visualised'?'var(--red)':'transparent'};color:${viz==='Not Visualised'?'white':'var(--red)'}">✗ NV</button>
+        </div>
       </div>
-      <div class="fg">${o.ps.map(p=>rF(o.id,p,sv2)).join("")}</div>
+      ${isNV?`<div style="text-align:center;padding:16px;color:var(--mgray);font-size:13px;background:var(--lgray);border-radius:10px;margin-bottom:10px">Not Visualised — organ not assessable</div>`:`<div class="fg">${o.ps.map(p=>rF(o.id,p,sv2)).join("")}</div>
       <div class="btns">
         ${cur>0?`<button class="btn btn-s" onclick="go(${cur-1})">← Back</button>`:""}
         <button class="btn btn-s" onclick="clrO()">↺ Clear</button>
         <button class="btn btn-p" onclick="doneO()">Save &amp; Next →</button>
       </div>
+      `}
     </div>`;
 }
 
@@ -542,7 +555,13 @@ function genReport(){
 
   OR.forEach(organ=>{
     const d=D[organ.id];
-    if(!organ.ps.some(p=>d[p.id])) return;
+    const viz=d._viz||"Visualised";
+    if(viz==="Not Visualised"){
+      html+=`<tr><td><div class="organ-name">${organ.ic} ${organ.lb}</div></td>
+        <td colspan="3" style="font-size:11px;color:var(--mgray);font-style:italic">Not Visualised — organ not assessable on this examination</td></tr>`;
+      return;
+    }
+    if(!organ.ps.some(p=>d[p.id]&&p.id!=='_viz')) return;
     let params="",findings="",remarks="",diffs=[];
     organ.ps.forEach(p=>{
       const v=d[p.id];if(!v) return;
@@ -569,8 +588,8 @@ function genReport(){
     if(diffs.length){
       const ud=[...new Set(diffs)];
       html+=`<tr><td colspan="4" style="background:var(--lorange);padding:4px 8px">
-        <span style="font-size:10px;font-weight:700;color:var(--orange)">⚠ Differentials — ${organ.lb}:</span>
-        <span style="font-size:10px;color:var(--dgray)"> ${ud.join(" · ")}</span>
+        <span style="font-size:9px;font-weight:700;color:var(--orange)">⚠ </span>
+        <span style="font-size:9px;color:var(--dgray)">${ud.slice(0,3).join(" · ")}</span>
       </td></tr>`;
     }
   });
@@ -588,11 +607,8 @@ function genReport(){
 
   const uD=[...new Set(allD)];
   if(uD.length){
-    html+=`<div class="sec-bar" style="border-color:var(--orange);color:var(--orange)">Differential Diagnoses — Consolidated</div>
-    <table class="diff-table">
-      <tr><th style="width:30px">#</th><th>Differential Diagnosis</th></tr>
-      ${uD.map((d,i)=>`<tr><td style="font-weight:700;color:var(--navy)">${i+1}</td><td>${d}</td></tr>`).join("")}
-    </table>`;
+    html+=`<div class="sec-bar" style="border-color:var(--orange);color:var(--orange);font-size:10px">Differential Diagnoses</div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;padding:2px 0">${uD.slice(0,15).map(d=>`<span style="background:var(--lorange);border:1px solid #f0c080;border-radius:5px;padding:2px 8px;font-size:10px;color:var(--orange);font-weight:500">${d}</span>`).join("")}</div>`;
   }
 
   html+=`
