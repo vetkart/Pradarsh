@@ -320,8 +320,65 @@ function field(oid,p,sv){
   if(p.t==="n") return '<div class="f"><label>'+p.lb+'</label><input type="number" step="0.1" inputmode="decimal" id="f'+oid+p.id+'" placeholder="'+(p.ph||'')+'" value="'+v+'"><div class="hint">'+(p.ht||'')+'</div></div>';
   var ops="";
   for(var i=0;i<p.op.length;i++) ops+='<option'+(v===p.op[i]?' selected':'')+'>'+p.op[i]+'</option>';
-  return '<div class="f"><label>'+p.lb+'</label><select id="f'+oid+p.id+'">'+ops+'</select>'+(p.ht?'<div class="hint">'+p.ht+'</div>':'')+'</div>';
+  var onch=p.df?'onchange="showDiffs(\''+oid+'\',\''+p.id+'\',this.value)"':'';
+  var diffBox=p.df?'<div id="diffs-'+oid+p.id+'" style="display:none"></div>':'';
+  return '<div class="f"><label>'+p.lb+'</label><select id="f'+oid+p.id+'" '+onch+'>'+ops+'</select>'+(p.ht?'<div class="hint">'+p.ht+'</div>':'')+diffBox+'</div>';
 }
+function showDiffs(oid, pid, val){
+  // Called when a select changes - show differential checkboxes
+  var diffs = null;
+  for(var i=0;i<OR.length;i++){
+    if(OR[i].id===oid){
+      for(var j=0;j<OR[i].ps.length;j++){
+        if(OR[i].ps[j].id===pid && OR[i].ps[j].df && OR[i].ps[j].df[val]){
+          diffs = OR[i].ps[j].df[val];
+          break;
+        }
+      }
+    }
+  }
+  var container = document.getElementById("diffs-"+oid+pid);
+  if(!container) return;
+  if(!diffs || isN(val)){
+    container.innerHTML="";
+    container.style.display="none";
+    return;
+  }
+  // Show checkboxes - pre-select all by default
+  if(!D[oid]) D[oid]={};
+  if(!D[oid]._diffs) D[oid]._diffs={};
+  // Default: all selected
+  if(!D[oid]._diffs[pid]) D[oid]._diffs[pid]=diffs.slice();
+  var h='<div style="background:var(--lorange);border:1px solid #f0c080;border-radius:8px;padding:8px;margin-top:4px">';
+  h+='<div style="font-size:10px;font-weight:700;color:var(--orange);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px">Select differentials for report:</div>';
+  for(var i=0;i<diffs.length;i++){
+    var checked = D[oid]._diffs[pid].indexOf(diffs[i])>-1 ? "checked" : "";
+    h+='<label style="display:flex;align-items:center;gap:6px;margin-bottom:4px;cursor:pointer;font-size:12px;color:var(--dgray)">';
+    h+='<input type="checkbox" '+checked+' data-oid="'+oid+'" data-pid="'+pid+'" data-diff="'+encodeURIComponent(diffs[i])+'" onchange="toggleDiffEl(this)" style="width:16px;height:16px;cursor:pointer">';
+    h+=diffs[i]+'</label>';
+  }
+  h+='</div>';
+  container.innerHTML=h;
+  container.style.display="block";
+}
+
+function toggleDiffEl(el){
+  var oid=el.getAttribute('data-oid');
+  var pid=el.getAttribute('data-pid');
+  var diff=decodeURIComponent(el.getAttribute('data-diff'));
+  toggleDiff(oid,pid,diff,el.checked);
+}
+
+function toggleDiff(oid, pid, diff, checked){
+  if(!D[oid]) D[oid]={};
+  if(!D[oid]._diffs) D[oid]._diffs={};
+  if(!D[oid]._diffs[pid]) D[oid]._diffs[pid]=[];
+  var arr=D[oid]._diffs[pid];
+  var idx=arr.indexOf(diff);
+  if(checked && idx===-1) arr.push(diff);
+  if(!checked && idx>-1) arr.splice(idx,1);
+}
+
 function render(){
   var o=OR[cur];
   var sv=D[o.id]||{};
@@ -410,9 +467,11 @@ function genReport(){
       else if(abn){
         parts.push(v);
         if(p.df&&p.df[v]){
-          var dd=p.df[v].slice(0,3);
-          for(var di=0;di<dd.length;di++){diffs.push(dd[di]);allD.push(dd[di]);}
-          conc.push({n:cNum++,org:organ.lb,find:v,diffs:dd});
+          // Use selected diffs if available, else use all
+          var allDD=p.df[v];
+          var selDD=(d._diffs&&d._diffs[p.id]&&d._diffs[p.id].length>0)?d._diffs[p.id]:allDD.slice(0,3);
+          for(var di=0;di<selDD.length;di++){diffs.push(selDD[di]);allD.push(selDD[di]);}
+          conc.push({n:cNum++,org:organ.lb,find:v,diffs:selDD});
         }
       }
     }
@@ -540,7 +599,8 @@ function genAI(){
         conc=organ.lb+": "+v+".";
         // Add differentials if available
         if(p.df&&p.df[v]){
-          var dd=p.df[v].slice(0,3);
+          var allDD=p.df[v];
+          var dd=(d._diffs&&d._diffs[p.id]&&d._diffs[p.id].length>0)?d._diffs[p.id]:allDD.slice(0,3);
           conc+=" Differentials include "+dd.join(" versus ")+".";
           // Add recommendation based on finding type
           var rec=getRec(organ.id,v);
