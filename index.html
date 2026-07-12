@@ -145,9 +145,26 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-ser
 <div id="report"></div>
 
 <script>
-var ICONS={"liver":'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiNlOGVhZjYiLz48ZWxsaXBzZSBjeD0iMjAiIGN5PSIyMSIgcng9IjE0IiByeT0iMTAiIGZpbGw9IiM3OTg2Y2IiLz48ZWxsaXBzZSBjeD0iMTQiIGN5PSIxOCIgcng9IjYiIHJ5PSI4IiBmaWxsPSIjNWM2YmMwIi8+PGNpcmNsZSBjeD0iMjgiIGN5PSIxNiIgcj0iNCIgZmlsbD0iIzlmYThkYSIvPjwvc3ZnPg==',"gb":'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiNmZmY4ZTEiLz48ZWxsaXBzZSBjeD0iMjAiIGN5PSIyMiIgcng9IjkiIHJ5PSIxMiIgZmlsbD0iI2ZmZDU0ZiIvPjxlbGxpcHNlIGN4PSIyMCIgY3k9IjE0IiByeD0iNSIgcnk9IjQiIGZpbGw9IiNmZmIzMDAiLz48bGluZSB4MT0iMjAiIHkxPSIxMCIgeDI9IjIwIiB5Mj0iOCIgc3Ryb2tlPSIjZjU3ZjE3IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg==',"spleen":'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiNmY2U0ZWMiLz48ZWxsaXBzZSBjeD0iMjAiIGN5PSIyMCIgcng9IjEzIiByeT0iMTAiIGZpbGw9IiNlOTFlNjMiIG9wYWNpdHk9IjAuNyIvPjxlbGxpcHNlIGN4PSIxNiIgY3k9IjE4IiByeD0iNyIgcnk9IjkiIGZpbGw9IiNjMjE4NWIiIG9wYWNpdHk9IjAuOCIvPjwvc3ZnPg==',"rk":'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiNlOGY1ZTkiLz48ZWxsaXBzZSBjeD0iMjAiIGN5PSIyMCIgcng9IjkiIHJ5PSIxMyIgZmlsbD0iIzY2YmI2YSIvPjxlbGxpcHNlIGN4PSIyMCIgY3k9IjIwIiByeD0iNSIgcnk9IjkiIGZpbGw9IiMzODhlM2MiIG9wYWNpdHk9IjAuNiIvPjxlbGxpcHNlIGN4PSIyMCIgY3k9IjIwIiByeD0iMiIgcnk9IjUiIGZpbGw9IiNlOGY1ZTkiLz48L3N2Zz4=',"lk":'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiNlOGY1ZTkiLz48ZWxsaXBzZSBjeD0iMjAiIGN5PSIyMCIgcng9IjkiIHJ5PSIxMyIgZmlsbD0iIzY2YmI2YSIvPjxlbGxpcHNlIGN4PSIyMCIgY3k9IjIwIiByeD0iNSIgcnk9IjkiIGZpbGw9IiMzODhlM2MiIG9wYWNpdHk9IjAuNiIvPjxlbGxpcHNlIGN4PSIyMCIgY3k9IjIwIiByeD0iMiIgcnk9IjUiIGZpbGw9IiNlOGY1ZTkiLz48L3N2Zz4=',"ub":'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiNlM2YyZmQiLz48ZWxsaXBzZSBjeD0iMjAiIGN5PSIyMiIgcng9IjEyIiByeT0iMTAiIGZpbGw9IiM0MmE1ZjUiIG9wYWNpdHk9IjAuNyIvPjxlbGxpcHNlIGN4PSIyMCIgY3k9IjIyIiByeD0iOCIgcnk9IjciIGZpbGw9IiMxNTY1YzAiIG9wYWNpdHk9IjAuNCIvPjxsaW5lIHgxPSIyMCIgeTE9IjEyIiB4Mj0iMjAiIHkyPSI4IiBzdHJva2U9IiMxOTc2ZDIiIHN0cm9rZS13aWR0aD0iMi41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4=',"stomach":'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiNmZmYzZTAiLz48cGF0aCBkPSJNMTAgMTggUTggMTIgMTQgMTAgUTIyIDggMjggMTIgUTM0IDE2IDMwIDI0IFEyNiAzMiAyMCAzMCBRMTIgMjggMTAgMThaIiBmaWxsPSIjZmY3MDQzIiBvcGFjaXR5PSIwLjgiLz48L3N2Zz4=',"si":'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiNmM2U1ZjUiLz48cGF0aCBkPSJNMTIgMTAgUTIwIDEwIDI0IDE2IFEyOCAyMiAyMCAyNCBRMTIgMjYgMTYgMzIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2FiNDdiYyIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4=',"li":'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiNlZmViZTkiLz48cGF0aCBkPSJNOCAxNCBROCA4IDE0IDggTDI2IDggUTMyIDggMzIgMTQgTDMyIDI2IFEzMiAzMiAyNiAzMiBMMTQgMzIgUTggMzIgOCAyNiBaIiBmaWxsPSJub25lIiBzdHJva2U9IiM3OTU1NDgiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjwvc3ZnPg==',"pan":'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiNlMGYyZjEiLz48ZWxsaXBzZSBjeD0iMjAiIGN5PSIyMiIgcng9IjE0IiByeT0iNiIgZmlsbD0iIzI2YTY5YSIgb3BhY2l0eT0iMC43Ii8+PGVsbGlwc2UgY3g9IjEyIiBjeT0iMjAiIHJ4PSI1IiByeT0iOCIgZmlsbD0iIzAwNzk2YiIgb3BhY2l0eT0iMC42Ii8+PC9zdmc+',"adr":'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiNmYmU5ZTciLz48cG9seWdvbiBwb2ludHM9IjIwLDggMzIsMjggOCwyOCIgZmlsbD0iI2ZmNTcyMiIgb3BhY2l0eT0iMC44Ii8+PHBvbHlnb24gcG9pbnRzPSIyMCwxNCAyOCwyNiAxMiwyNiIgZmlsbD0iI2JmMzYwYyIgb3BhY2l0eT0iMC41Ii8+PC9zdmc+',"ln":'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiNlOGVhZjYiLz48Y2lyY2xlIGN4PSIxNCIgY3k9IjE2IiByPSI1IiBmaWxsPSIjMzk0OWFiIiBvcGFjaXR5PSIwLjgiLz48Y2lyY2xlIGN4PSIyNiIgY3k9IjE2IiByPSI1IiBmaWxsPSIjMzk0OWFiIiBvcGFjaXR5PSIwLjgiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjI2IiByPSI1IiBmaWxsPSIjMzk0OWFiIiBvcGFjaXR5PSIwLjgiLz48bGluZSB4MT0iMTQiIHkxPSIxNiIgeDI9IjI2IiB5Mj0iMTYiIHN0cm9rZT0iIzc5ODZjYiIgc3Ryb2tlLXdpZHRoPSIyIi8+PGxpbmUgeDE9IjE0IiB5MT0iMTYiIHgyPSIyMCIgeTI9IjI2IiBzdHJva2U9IiM3OTg2Y2IiIHN0cm9rZS13aWR0aD0iMiIvPjxsaW5lIHgxPSIyNiIgeTE9IjE2IiB4Mj0iMjAiIHkyPSIyNiIgc3Ryb2tlPSIjNzk4NmNiIiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4=',"uter":'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiNmY2U0ZWMiLz48cGF0aCBkPSJNMjAgMjggTDIwIDIwIFEyMCAxNCAxNCAxMiBNMjAgMjAgUTIwIDE0IDI2IDEyIiBmaWxsPSJub25lIiBzdHJva2U9IiNlOTFlNjMiIHN0cm9rZS13aWR0aD0iMy41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjMwIiByPSI0IiBmaWxsPSIjZTkxZTYzIiBvcGFjaXR5PSIwLjgiLz48L3N2Zz4=',"peri":'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiNlM2YyZmQiLz48ZWxsaXBzZSBjeD0iMjAiIGN5PSIyNCIgcng9IjE0IiByeT0iNiIgZmlsbD0iIzE1NjVjMCIgb3BhY2l0eT0iMC4zIi8+PGVsbGlwc2UgY3g9IjIwIiBjeT0iMjIiIHJ4PSIxNCIgcnk9IjYiIGZpbGw9IiMxOTc2ZDIiIG9wYWNpdHk9IjAuMyIvPjxlbGxpcHNlIGN4PSIyMCIgY3k9IjIwIiByeD0iMTQiIHJ5PSI2IiBmaWxsPSIjNDJhNWY1IiBvcGFjaXR5PSIwLjQiLz48L3N2Zz4='};
+
+var ICONS={
+  "liver":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+CjxyZWN0IHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcng9IjgiIGZpbGw9IiNmZmYwZTYiLz4KPHBhdGggZD0iTTYgMjAgUTUgMTIgMTEgMTAgUTE3IDggMjAgMTIgUTIzIDggMjkgOSBRMzUgMTAgMzUgMTYgUTM2IDIyIDMwIDI2IFEyNCAzMCAxOCAyOSBRMTAgMjggNiAyMFoiIGZpbGw9IiNjMDM5MmIiIG9wYWNpdHk9IjAuODUiLz4KPHBhdGggZD0iTTIwIDEyIFEyMiAxNiAyMiAyMiBRMjIgMjcgMTggMjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzkyMmIyMSIgc3Ryb2tlLXdpZHRoPSIxLjIiLz4KPHBhdGggZD0iTTEwIDE2IFExNCAxOCAxNiAyMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOTIyYjIxIiBzdHJva2Utd2lkdGg9IjAuOCIgb3BhY2l0eT0iMC42Ii8+CjxwYXRoIGQ9Ik0yNiAxMyBRMjggMTcgMjcgMjIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzkyMmIyMSIgc3Ryb2tlLXdpZHRoPSIwLjgiIG9wYWNpdHk9IjAuNiIvPgo8ZWxsaXBzZSBjeD0iMTQiIGN5PSIyNCIgcng9IjMiIHJ5PSIyIiBmaWxsPSIjZTc0YzNjIiBvcGFjaXR5PSIwLjUiLz4KPC9zdmc+",
+  "gb":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+CjxyZWN0IHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcng9IjgiIGZpbGw9IiNmZmZkZTciLz4KPHBhdGggZD0iTTIwIDggUTIyIDggMjMgMTAgTDIzIDE0IFEyOCAxNiAyOSAyMiBRMzAgMzAgMjAgMzEgUTEwIDMwIDExIDIyIFExMiAxNiAxNyAxNCBMMTcgMTAgUTE4IDggMjAgOFoiIGZpbGw9IiNmMzljMTIiIG9wYWNpdHk9IjAuOSIvPgo8cGF0aCBkPSJNMTcgMTQgUTIwIDE1IDIzIDE0IiBmaWxsPSJub25lIiBzdHJva2U9IiNkNjg5MTAiIHN0cm9rZS13aWR0aD0iMS4yIi8+CjxlbGxpcHNlIGN4PSIyMCIgY3k9IjIzIiByeD0iNiIgcnk9IjUiIGZpbGw9IiNmMWM0MGYiIG9wYWNpdHk9IjAuNCIvPgo8cGF0aCBkPSJNMjAgOCBRMjAgNiAyMiA1IFEyNiA1IDI2IDgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Q2ODkxMCIgc3Ryb2tlLXdpZHRoPSIxLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4=",
+  "spleen":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+CjxyZWN0IHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcng9IjgiIGZpbGw9IiNmY2U0ZWMiLz4KPHBhdGggZD0iTTggMjAgUTggMTAgMTYgOCBRMjQgNiAzMCAxMiBRMzYgMTggMzIgMjYgUTI4IDM0IDIwIDMzIFExMCAzMiA4IDIwWiIgZmlsbD0iI2U5MWU2MyIgb3BhY2l0eT0iMC44Ii8+CjxwYXRoIGQ9Ik0xMiAxNSBRMTggMTIgMjYgMTUgUTMwIDE4IDI4IDI1IFEyNCAzMCAxOCAyOCBRMTIgMjQgMTIgMTVaIiBmaWxsPSIjYzIxODViIiBvcGFjaXR5PSIwLjQiLz4KPHBhdGggZD0iTTE2IDEyIFEyMiAxNCAyNiAyMCBRMjggMjYgMjIgMjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzg4MGU0ZiIgc3Ryb2tlLXdpZHRoPSIxIiBvcGFjaXR5PSIwLjUiLz4KPC9zdmc+",
+  "rk":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+CjxyZWN0IHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcng9IjgiIGZpbGw9IiNlOGY1ZTkiLz4KPHBhdGggZD0iTTEyIDggUTIwIDUgMjYgMTAgUTMyIDE1IDMwIDIzIFEyOCAzMSAyMCAzMyBRMTIgMzUgOCAyOCBRNCAyMSA4IDE0IFE5IDEwIDEyIDhaIiBmaWxsPSIjNDNhMDQ3IiBvcGFjaXR5PSIwLjg1Ii8+CjxwYXRoIGQ9Ik0xOCAxMCBRMTYgMTQgMTcgMjAgUTE4IDI2IDIyIDI4IiBmaWxsPSJub25lIiBzdHJva2U9IiMxYjVlMjAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPGVsbGlwc2UgY3g9IjE5IiBjeT0iMjAiIHJ4PSI1IiByeT0iNyIgZmlsbD0iIzFiNWUyMCIgb3BhY2l0eT0iMC4yIi8+CjxwYXRoIGQ9Ik0xNiAxNCBRMTQgMjAgMTYgMjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzJlN2QzMiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPGNpcmNsZSBjeD0iMjQiIGN5PSIyMCIgcj0iMiIgZmlsbD0iI2E1ZDZhNyIgb3BhY2l0eT0iMC44Ii8+Cjwvc3ZnPg==",
+  "lk":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+CjxyZWN0IHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcng9IjgiIGZpbGw9IiNlOGY1ZTkiLz4KPHBhdGggZD0iTTI4IDggUTIwIDUgMTQgMTAgUTggMTUgMTAgMjMgUTEyIDMxIDIwIDMzIFEyOCAzNSAzMiAyOCBRMzYgMjEgMzIgMTQgUTMxIDEwIDI4IDhaIiBmaWxsPSIjNDNhMDQ3IiBvcGFjaXR5PSIwLjg1Ii8+CjxwYXRoIGQ9Ik0yMiAxMCBRMjQgMTQgMjMgMjAgUTIyIDI2IDE4IDI4IiBmaWxsPSJub25lIiBzdHJva2U9IiMxYjVlMjAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPGVsbGlwc2UgY3g9IjIxIiBjeT0iMjAiIHJ4PSI1IiByeT0iNyIgZmlsbD0iIzFiNWUyMCIgb3BhY2l0eT0iMC4yIi8+CjxwYXRoIGQ9Ik0yNCAxNCBRMjYgMjAgMjQgMjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzJlN2QzMiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPGNpcmNsZSBjeD0iMTYiIGN5PSIyMCIgcj0iMiIgZmlsbD0iI2E1ZDZhNyIgb3BhY2l0eT0iMC44Ii8+Cjwvc3ZnPg==",
+  "ub":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+CjxyZWN0IHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcng9IjgiIGZpbGw9IiNlM2YyZmQiLz4KPHBhdGggZD0iTTIwIDYgUTIyIDYgMjMgOCBMMjUgMTIgUTMyIDE0IDMzIDIyIFEzNCAzMCAyMCAzMiBRNiAzMCA3IDIyIFE4IDE0IDE1IDEyIEwxNyA4IFExOCA2IDIwIDZaIiBmaWxsPSIjMTk3NmQyIiBvcGFjaXR5PSIwLjc1Ii8+CjxlbGxpcHNlIGN4PSIyMCIgY3k9IjIyIiByeD0iOSIgcnk9IjciIGZpbGw9IiNiYmRlZmIiIG9wYWNpdHk9IjAuNSIvPgo8cGF0aCBkPSJNMTYgMTIgUTIwIDEzIDI0IDEyIiBzdHJva2U9IiMwZDQ3YTEiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIvPgo8cGF0aCBkPSJNMjAgMzAgTDIwIDM1IiBzdHJva2U9IiMxNTY1YzAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPg==",
+  "stomach":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+CjxyZWN0IHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcng9IjgiIGZpbGw9IiNmZmYzZTAiLz4KPHBhdGggZD0iTTEwIDEwIFExMCA3IDE0IDcgUTE4IDcgMTkgMTAgTDIwIDE0IFEyNiAxMiAzMCAxNiBRMzQgMjAgMzIgMjcgUTMwIDM0IDIyIDM0IFExNCAzNCAxMiAyNyBRMTAgMjIgMTIgMTggTDEwIDEwWiIgZmlsbD0iI2U2NTEwMCIgb3BhY2l0eT0iMC44Ii8+CjxwYXRoIGQ9Ik0xNCA4IFExOCA5IDE5IDEyIiBmaWxsPSJub25lIiBzdHJva2U9IiNiZjM2MGMiIHN0cm9rZS13aWR0aD0iMS4yIi8+CjxwYXRoIGQ9Ik0yMCAxNCBRMjQgMTMgMjggMTcgUTMxIDIxIDI5IDI3IFEyNyAzMiAyMiAzMiBRMTYgMzIgMTQgMjcgUTEyIDIyIDE0IDE4IiBmaWxsPSJub25lIiBzdHJva2U9IiNiZjM2MGMiIHN0cm9rZS13aWR0aD0iMSIgb3BhY2l0eT0iMC41Ii8+CjxlbGxpcHNlIGN4PSIyMiIgY3k9IjI0IiByeD0iNiIgcnk9IjUiIGZpbGw9IiNmZjhhNjUiIG9wYWNpdHk9IjAuMyIvPgo8L3N2Zz4=",
+  "si":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+CjxyZWN0IHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcng9IjgiIGZpbGw9IiNmM2U1ZjUiLz4KPHBhdGggZD0iTTggMTIgUTggOCAxMiA4IFExNiA4IDE2IDEyIFExNiAxOCAxMCAyMCBROCAyMSA4IDI0IFE4IDI4IDEzIDI5IFExOSAzMCAyMSAyNSBRMjMgMjAgMTggMTggUTE0IDE2IDE1IDEyIFExNiA4IDIwIDggUTI0IDggMjQgMTIgUTI0IDE4IDMwIDIwIFEzNCAyMiAzMyAyNyBRMzIgMzMgMjYgMzMgUTIwIDMzIDIwIDI4IiBmaWxsPSJub25lIiBzdHJva2U9IiM3YjFmYTIiIHN0cm9rZS13aWR0aD0iMy41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9zdmc+",
+  "li":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+CjxyZWN0IHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcng9IjgiIGZpbGw9IiNlZmViZTkiLz4KPHBhdGggZD0iTTEyIDggTDI4IDggUTMzIDggMzMgMTMgTDMzIDE4IFEzMyAyMiAyOSAyMiBMMjYgMjIgUTIyIDIyIDIyIDI2IEwyMiAzMCBRMjIgMzMgMTggMzMgTDE0IDMzIFExMCAzMyAxMCAyOSBMMTAgMjIgUTEwIDE4IDE0IDE4IEwxNSAxOCBRMTggMTggMTggMTQgTDE4IDgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzVkNDAzNyIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPGNpcmNsZSBjeD0iMTIiIGN5PSI4IiByPSIzIiBmaWxsPSIjOGQ2ZTYzIi8+CjxjaXJjbGUgY3g9IjI4IiBjeT0iOCIgcj0iMyIgZmlsbD0iIzhkNmU2MyIvPgo8Y2lyY2xlIGN4PSIzMyIgY3k9IjIyIiByPSIzIiBmaWxsPSIjOGQ2ZTYzIi8+Cjwvc3ZnPg==",
+  "pan":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+CjxyZWN0IHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcng9IjgiIGZpbGw9IiNlMGY3ZmEiLz4KPHBhdGggZD0iTTUgMjIgUTggMTYgMTMgMTcgUTE2IDE4IDE4IDIwIFEyMCAxOCAyNCAxNyBRMzAgMTUgMzQgMTkgUTM3IDIyIDM0IDI1IFEzMCAyOCAyNCAyNiBRMjAgMjQgMTggMjIgUTE2IDI0IDEzIDI1IFE4IDI2IDUgMjJaIiBmaWxsPSIjMDA4MzhmIiBvcGFjaXR5PSIwLjgiLz4KPHBhdGggZD0iTTE4IDIwIFEyMCAxNiAyMiAyMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDA2MDY0IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iOSIgY3k9IjIxIiByPSIzIiBmaWxsPSIjNGRkMGUxIiBvcGFjaXR5PSIwLjYiLz4KPGNpcmNsZSBjeD0iMTQiIGN5PSIxOSIgcj0iMiIgZmlsbD0iIzRkZDBlMSIgb3BhY2l0eT0iMC41Ii8+CjxjaXJjbGUgY3g9IjI2IiBjeT0iMjAiIHI9IjIiIGZpbGw9IiM0ZGQwZTEiIG9wYWNpdHk9IjAuNSIvPgo8Y2lyY2xlIGN4PSIzMiIgY3k9IjIxIiByPSIyLjUiIGZpbGw9IiM0ZGQwZTEiIG9wYWNpdHk9IjAuNiIvPgo8L3N2Zz4=",
+  "adr":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+CjxyZWN0IHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcng9IjgiIGZpbGw9IiNmYmU5ZTciLz4KPHBhdGggZD0iTTEwIDMwIFE4IDIyIDEyIDE2IFExNiAxMCAyMCAxMiBRMjQgMTAgMjggMTYgUTMyIDIyIDMwIDMwWiIgZmlsbD0iI2JkYmRiZCIgb3BhY2l0eT0iMC42Ii8+CjxwYXRoIGQ9Ik0xMyAyOCBRMTEgMjIgMTQgMTcgUTE3IDEyIDIwIDE0IFEyMyAxMiAyNiAxNyBRMjkgMjIgMjcgMjhaIiBmaWxsPSIjZmY3MDQzIiBvcGFjaXR5PSIwLjg1Ii8+CjxwYXRoIGQ9Ik0xNiAyNSBRMTYgMjAgMjAgMTggUTI0IDIwIDI0IDI1IiBmaWxsPSJub25lIiBzdHJva2U9IiNiZjM2MGMiIHN0cm9rZS13aWR0aD0iMS4yIi8+CjxlbGxpcHNlIGN4PSIyMCIgY3k9IjIyIiByeD0iMyIgcnk9IjQiIGZpbGw9IiNmZjhhNjUiIG9wYWNpdHk9IjAuNSIvPgo8L3N2Zz4=",
+  "ln":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+CjxyZWN0IHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcng9IjgiIGZpbGw9IiNlZGU3ZjYiLz4KPGxpbmUgeDE9IjIwIiB5MT0iMTAiIHgyPSIxMiIgeTI9IjIyIiBzdHJva2U9IiM3ZTU3YzIiIHN0cm9rZS13aWR0aD0iMS41Ii8+CjxsaW5lIHgxPSIyMCIgeTE9IjEwIiB4Mj0iMjgiIHkyPSIyMiIgc3Ryb2tlPSIjN2U1N2MyIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8bGluZSB4MT0iMTIiIHkxPSIyMiIgeDI9IjIwIiB5Mj0iMzIiIHN0cm9rZT0iIzdlNTdjMiIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPGxpbmUgeDE9IjI4IiB5MT0iMjIiIHgyPSIyMCIgeTI9IjMyIiBzdHJva2U9IiM3ZTU3YzIiIHN0cm9rZS13aWR0aD0iMS41Ii8+CjxsaW5lIHgxPSIxMiIgeTE9IjIyIiB4Mj0iMjgiIHkyPSIyMiIgc3Ryb2tlPSIjN2U1N2MyIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8Y2lyY2xlIGN4PSIyMCIgY3k9IjEwIiByPSI1IiBmaWxsPSIjNWUzNWIxIiBvcGFjaXR5PSIwLjg1Ii8+CjxjaXJjbGUgY3g9IjEyIiBjeT0iMjIiIHI9IjUiIGZpbGw9IiM1ZTM1YjEiIG9wYWNpdHk9IjAuODUiLz4KPGNpcmNsZSBjeD0iMjgiIGN5PSIyMiIgcj0iNSIgZmlsbD0iIzVlMzViMSIgb3BhY2l0eT0iMC44NSIvPgo8Y2lyY2xlIGN4PSIyMCIgY3k9IjMyIiByPSI1IiBmaWxsPSIjNWUzNWIxIiBvcGFjaXR5PSIwLjg1Ii8+Cjwvc3ZnPg==",
+  "uter":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+CjxyZWN0IHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcng9IjgiIGZpbGw9IiNmY2U0ZWMiLz4KPHBhdGggZD0iTTIwIDI4IEwyMCAyMiBRMjAgMTYgMTQgMTIgUTEwIDEwIDEwIDE0IFExMCAxOCAxNCAxOCBRMTggMTggMjAgMjIgTTIwIDIyIFEyMiAxOCAyNiAxOCBRMzAgMTggMzAgMTQgUTMwIDEwIDI2IDEyIFEyMCAxNiAyMCAyMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZTkxZTYzIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8cGF0aCBkPSJNMTUgMjggUTIwIDI0IDI1IDI4IFEyNiAzMiAyMCAzMyBRMTQgMzIgMTUgMjhaIiBmaWxsPSIjZTkxZTYzIiBvcGFjaXR5PSIwLjgiLz4KPGVsbGlwc2UgY3g9IjIwIiBjeT0iMzAiIHJ4PSI1IiByeT0iMyIgZmlsbD0iI2Y0OGZiMSIgb3BhY2l0eT0iMC41Ii8+Cjwvc3ZnPg==",
+  "peri":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCI+CjxyZWN0IHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcng9IjgiIGZpbGw9IiNlM2YyZmQiLz4KPGVsbGlwc2UgY3g9IjIwIiBjeT0iMjAiIHJ4PSIxNSIgcnk9IjE0IiBmaWxsPSJub25lIiBzdHJva2U9IiMxNTY1YzAiIHN0cm9rZS13aWR0aD0iMiIvPgo8cGF0aCBkPSJNNyAyMCBRMTEgMTYgMTUgMjAgUTE5IDI0IDIzIDIwIFEyNyAxNiAzMyAyMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMTk3NmQyIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8cGF0aCBkPSJNNyAyNSBRMTEgMjEgMTUgMjUgUTE5IDI5IDIzIDI1IFEyNyAyMSAzMyAyNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDJhNWY1IiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxwYXRoIGQ9Ik05IDE1IFExMyAxMSAxNyAxNSBRMjEgMTkgMjUgMTUgUTI5IDExIDMzIDE1IiBmaWxsPSJub25lIiBzdHJva2U9IiM5MGNhZjkiIHN0cm9rZS13aWR0aD0iMS4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9zdmc+"
+};
+
 var OR=[
- {id:"liver",lb:"Liver",ic:"LIV",ps:[
+ {id:"liver",lb:"Liver",ic:"🫀",ps:[
   {id:"sz",lb:"Liver Size",t:"s",op:["Normal","Hepatomegaly — mild","Hepatomegaly — moderate","Hepatomegaly — severe","Microhepatica"],df:{"Hepatomegaly — mild":["Reactive hepatopathy","Steroid hepatopathy","Early hepatitis","Hepatic lymphoma"],"Hepatomegaly — moderate":["Hepatic lipidosis (cat)","Vacuolar hepatopathy","Hepatic neoplasia","Right heart failure"],"Hepatomegaly — severe":["Diffuse hepatic neoplasia","Severe hepatic lipidosis","Hepatic congestion — CHF"],"Microhepatica":["Portosystemic shunt","Hepatic cirrhosis","Chronic hepatic fibrosis"]}},
   {id:"ec",lb:"Echogenicity",t:"s",op:["Normal — isoechoic to spleen","Hyperechoic — diffuse","Hypoechoic — diffuse","Hyperechoic — focal","Hypoechoic — focal","Mixed echogenicity"],df:{"Hyperechoic — diffuse":["Hepatic lipidosis","Steroid hepatopathy","Vacuolar hepatopathy"],"Hypoechoic — diffuse":["Acute hepatitis","Hepatic lymphoma","Leptospirosis"],"Hyperechoic — focal":["Nodular hyperplasia","Hepatic adenoma","Granuloma"],"Hypoechoic — focal":["Hepatic cyst","Abscess","Hepatocellular carcinoma","Metastatic neoplasia"],"Mixed echogenicity":["Hepatic neoplasia","Abscess","Haematoma"]}},
   {id:"mg",lb:"Margins",t:"s",op:["Smooth — regular","Irregular","Rounded","Nodular surface"]},
@@ -157,21 +174,21 @@ var OR=[
   {id:"span",lb:"Liver Span (cm)",t:"n",ph:"cm",ht:"Dog: 8-15cm / Cat: 4-7cm"},
   {id:"rem",lb:"Remarks",t:"txt",ph:"Portal hypertension signs, Doppler findings, lobe affected..."}
  ]},
- {id:"gb",lb:"Gall Bladder",ic:"G/B",ps:[
+ {id:"gb",lb:"Gall Bladder",ic:"🟡",ps:[
   {id:"sz",lb:"GB Size",t:"s",op:["Normal","Mildly distended","Markedly distended","Small / contracted"]},
   {id:"wl",lb:"Wall Thickness",t:"s",op:["Normal < 1mm","Mild thickening 1-3mm","Marked thickening > 3mm","Striated / oedematous wall"],df:{"Mild thickening 1-3mm":["Cholecystitis","Hypoalbuminaemia","Adjacent hepatitis"],"Marked thickening > 3mm":["Severe cholecystitis","Biliary mucocoele","Neoplasia"]}},
   {id:"ct",lb:"GB Content",t:"s",op:["Anechoic — normal bile","Biliary sludge","Cholelithiasis — acoustic shadowing","Mucocoele — stellate pattern","Haemobilia"],df:{"Biliary sludge":["Cholestasis","Prolonged anorexia","Haemolytic disease"],"Cholelithiasis — acoustic shadowing":["Choleliths","Cholelithiasis with obstruction"],"Mucocoele — stellate pattern":["Biliary mucocoele — surgical emergency"]}},
   {id:"cbd",lb:"CBD Diameter (mm)",t:"n",ph:"mm",ht:"Dog: < 3mm / Cat: < 4mm"},
   {id:"rem",lb:"Remarks",t:"txt",ph:"GB wall vascularity, cystic duct appearance..."}
  ]},
- {id:"spleen",lb:"Spleen",ic:"SPL",ps:[
+ {id:"spleen",lb:"Spleen",ic:"💧",ps:[
   {id:"sz",lb:"Spleen Size",t:"s",op:["Normal","Splenomegaly — mild","Splenomegaly — moderate","Splenomegaly — severe","Reduced"],df:{"Splenomegaly — mild":["Reactive splenomegaly","Splenic congestion","Sedation artefact"],"Splenomegaly — moderate":["Extramedullary haematopoiesis","Splenic lymphoma","Haemangiosarcoma"],"Splenomegaly — severe":["Haemangiosarcoma","Mast cell tumour","Splenic lymphoma","Splenic torsion"]}},
   {id:"ec",lb:"Echogenicity",t:"s",op:["Normal — homogeneous","Hyperechoic — diffuse","Hypoechoic — diffuse","Focal hypoechoic lesion","Mixed / heterogeneous"],df:{"Hypoechoic — diffuse":["Splenic lymphoma","Acute congestion","Leukaemia"],"Focal hypoechoic lesion":["Haematoma","Splenic cyst","Abscess","Haemangiosarcoma"],"Mixed / heterogeneous":["Haemangiosarcoma","Splenic sarcoma","Complex haematoma"]}},
   {id:"ms",lb:"Focal Lesion",t:"s",op:["None","Nodule < 1cm","Mass 1-3cm","Mass > 3cm","Cavitary lesion"],df:{"Mass 1-3cm":["Haemangiosarcoma","Haematoma","Mast cell tumour"],"Mass > 3cm":["Haemangiosarcoma (dog)","Mast cell tumour (cat)","Sarcoma"],"Cavitary lesion":["Haemangiosarcoma — cavitary","Abscess","Organised haematoma"]}},
   {id:"ef",lb:"Peritoneal Effusion Near",t:"s",op:["None","Trace","Moderate","Large — haemoperitoneum suspected"]},
   {id:"rem",lb:"Remarks",t:"txt",ph:"Splenic torsion signs, hilar vascularity..."}
  ]},
- {id:"rk",lb:"Right Kidney",ic:"R/K",ps:[
+ {id:"rk",lb:"Right Kidney",ic:"🫘",ps:[
   {id:"len",lb:"Length (cm)",t:"n",ph:"cm",ht:"Dog: 5.5-8.5cm / Cat: 3.0-4.5cm"},
   {id:"wid",lb:"Width (cm)",t:"n",ph:"cm"},
   {id:"cth",lb:"Cortical Thickness (mm)",t:"n",ph:"mm",ht:"Dog: 4-7mm / Cat: 2-4mm"},
@@ -181,7 +198,7 @@ var OR=[
   {id:"ca",lb:"Calculi",t:"s",op:["None","Cortical mineralisation","Pelvic calculus — shadowing","Nephrolithiasis — multiple"]},
   {id:"rem",lb:"Remarks",t:"txt",ph:"Doppler resistive index, capsule, ureteral jet..."}
  ]},
- {id:"lk",lb:"Left Kidney",ic:"L/K",ps:[
+ {id:"lk",lb:"Left Kidney",ic:"🫘",ps:[
   {id:"len",lb:"Length (cm)",t:"n",ph:"cm",ht:"Dog: 5.5-8.5cm / Cat: 3.0-4.5cm"},
   {id:"wid",lb:"Width (cm)",t:"n",ph:"cm"},
   {id:"cth",lb:"Cortical Thickness (mm)",t:"n",ph:"mm",ht:"Dog: 4-7mm / Cat: 2-4mm"},
@@ -191,14 +208,14 @@ var OR=[
   {id:"ca",lb:"Calculi",t:"s",op:["None","Cortical mineralisation","Pelvic calculus — shadowing","Nephrolithiasis — multiple"]},
   {id:"rem",lb:"Remarks",t:"txt",ph:"Compare with right kidney, perirenal findings..."}
  ]},
- {id:"ub",lb:"Urinary Bladder",ic:"UB",ps:[
+ {id:"ub",lb:"Urinary Bladder",ic:"💦",ps:[
   {id:"dist",lb:"Distension",t:"s",op:["Well distended","Moderately filled","Poorly distended","Over-distended — obstruction","Collapsed — rupture suspected"]},
   {id:"wl",lb:"Wall Thickness",t:"s",op:["Normal < 2mm","Diffuse thickening 2-4mm","Diffuse thickening > 4mm","Focal thickening","Polypoid mass"],df:{"Diffuse thickening 2-4mm":["Bacterial cystitis","Haemorrhagic cystitis","Feline idiopathic cystitis"],"Focal thickening":["Transitional cell carcinoma (TCC)","Inflammatory polyp","Granuloma"],"Polypoid mass":["TCC","Benign polyp"]}},
   {id:"ct",lb:"Contents",t:"s",op:["Clear — anechoic","Echogenic sediment","Urolithiasis — shadowing","Blood clots","Gas — emphysematous cystitis"],df:{"Echogenic sediment":["Crystalluria","Haemorrhagic cystitis"],"Urolithiasis — shadowing":["Struvite uroliths","Calcium oxalate uroliths","Urate uroliths"],"Blood clots":["Haemorrhagic cystitis","TCC bleeding","Coagulopathy"]}},
   {id:"trig",lb:"Trigone",t:"s",op:["Normal","Mass at trigone — TCC suspected","Thickening at trigone","Calculi at trigone"]},
   {id:"rem",lb:"Remarks",t:"txt",ph:"Wall vascularity, ureteral jets..."}
  ]},
- {id:"stomach",lb:"Stomach",ic:"STM",ps:[
+ {id:"stomach",lb:"Stomach",ic:"🌀",ps:[
   {id:"wt",lb:"Wall Thickness (mm)",t:"n",ph:"mm",ht:"Dog: < 5mm / Cat: < 4.5mm"},
   {id:"wl",lb:"Wall Layering",t:"s",op:["Normal — 5 layers preserved","Focal loss of layering","Diffuse loss of layering","Diffuse thickening — preserved layers"],df:{"Focal loss of layering":["Gastric carcinoma","High-grade lymphoma — focal","Leiomyosarcoma"],"Diffuse loss of layering":["High-grade lymphoma — diffuse","Diffuse carcinoma"],"Diffuse thickening — preserved layers":["IBD — lymphoplasmacytic gastritis","Low-grade lymphoma (cat)"]}},
   {id:"ct",lb:"Content",t:"s",op:["Normal — food / fluid","Empty — fasted","Fluid distension","Foreign body — shadowing","Gas distension"]},
@@ -206,7 +223,7 @@ var OR=[
   {id:"py",lb:"Pylorus",t:"s",op:["Normal","Pyloric wall thickening","Pyloric obstruction","Hypertrophic pyloric stenosis"]},
   {id:"rem",lb:"Remarks",t:"txt",ph:"Location of lesion, rugal fold assessment..."}
  ]},
- {id:"si",lb:"Small Intestine",ic:"S/I",ps:[
+ {id:"si",lb:"Small Intestine",ic:"〰",ps:[
   {id:"wt",lb:"Wall Thickness (mm)",t:"n",ph:"mm",ht:"Dog: < 5mm / Cat: < 2.5mm"},
   {id:"wl",lb:"Wall Layering",t:"s",op:["Normal — 5 layers preserved","Focal loss of layering","Diffuse loss of layering","Diffuse thickening — preserved layers","Focal thickening — preserved layers"],df:{"Focal loss of layering":["GI adenocarcinoma","High-grade lymphoma — focal","Leiomyosarcoma"],"Diffuse loss of layering":["High-grade lymphoma","Diffuse infiltrative neoplasia"],"Diffuse thickening — preserved layers":["IBD — lymphoplasmacytic","Small cell lymphoma (cat)","Protein-losing enteropathy"]}},
   {id:"mu",lb:"Mucosal Echogenicity",t:"s",op:["Normal","Hyperechoic mucosal striping","Irregular mucosal surface","Mucosal ulceration suspected"]},
@@ -215,13 +232,13 @@ var OR=[
   {id:"in",lb:"Intussusception",t:"s",op:["None","Target sign present","Corrugated bowel segment"]},
   {id:"rem",lb:"Remarks",t:"txt",ph:"Affected segment, free fluid, lymph node changes..."}
  ]},
- {id:"li",lb:"Large Intestine",ic:"L/I",ps:[
+ {id:"li",lb:"Large Intestine",ic:"🔄",ps:[
   {id:"wt",lb:"Wall Thickness (mm)",t:"n",ph:"mm",ht:"Normal: < 3mm"},
   {id:"wl",lb:"Wall Assessment",t:"s",op:["Normal","Diffuse thickening","Focal thickening","Focal mass — carcinoma suspected","Wall infiltration"],df:{"Focal mass — carcinoma suspected":["Colonic adenocarcinoma","Colorectal carcinoma"],"Wall infiltration":["Colorectal lymphoma","IBD"]}},
   {id:"ct",lb:"Content",t:"s",op:["Normal faecal material","Fluid — colitis pattern","Impaction","Gas distension"]},
   {id:"rem",lb:"Remarks",t:"txt",ph:"Rectal assessment, mesenteric involvement..."}
  ]},
- {id:"pan",lb:"Pancreas",ic:"PAN",ps:[
+ {id:"pan",lb:"Pancreas",ic:"〰",ps:[
   {id:"viz",lb:"Visualisation",t:"s",op:["Visualised — adequate","Partially visualised","Not visualised — gas obscuring","Not visualised — obese patient"]},
   {id:"rl",lb:"Right Limb Thickness (mm)",t:"n",ph:"mm",ht:"Dog: 6-12mm / Cat: 4-8mm"},
   {id:"ll",lb:"Left Limb Thickness (mm)",t:"n",ph:"mm"},
@@ -230,7 +247,7 @@ var OR=[
   {id:"dc",lb:"Pancreatic Duct",t:"s",op:["Not dilated","Mildly dilated","Markedly dilated — obstruction"]},
   {id:"rem",lb:"Remarks",t:"txt",ph:"Extent of peripancreatic involvement, duodenal wall changes..."}
  ]},
- {id:"adr",lb:"Adrenal Glands",ic:"ADR",ps:[
+ {id:"adr",lb:"Adrenal Glands",ic:"▲",ps:[
   {id:"rwid",lb:"Right Adrenal Width (cm)",t:"n",ph:"cm",ht:"Dog: < 0.76cm / Cat: < 0.46cm"},
   {id:"lwid",lb:"Left Adrenal Width (cm)",t:"n",ph:"cm"},
   {id:"sh",lb:"Shape / Contour",t:"s",op:["Normal — bilobed peanut shape","Rounded — bilateral","Rounded — unilateral R","Rounded — unilateral L","Nodule identified R","Nodule identified L","Mineralisation"],df:{"Rounded — bilateral":["PDH — pituitary-dependent hyperadrenocorticism","Bilateral adrenal hyperplasia"],"Rounded — unilateral R":["Adrenal adenoma","Adrenal carcinoma","Phaeochromocytoma"],"Rounded — unilateral L":["Adrenal adenoma","Adrenal carcinoma","Phaeochromocytoma"],"Nodule identified R":["Adrenocortical adenoma","Adrenocortical carcinoma","Phaeochromocytoma"],"Nodule identified L":["Adrenocortical adenoma","Adrenocortical carcinoma","Phaeochromocytoma"]}},
@@ -238,7 +255,7 @@ var OR=[
   {id:"vi",lb:"Vascular Invasion",t:"s",op:["None","CVC thrombus — right adrenal","Aortic invasion suspected"]},
   {id:"rem",lb:"Remarks",t:"txt",ph:"Contralateral adrenal, caudal vena cava..."}
  ]},
- {id:"ln",lb:"Lymph Nodes",ic:"L/N",ps:[
+ {id:"ln",lb:"Lymph Nodes",ic:"🔵",ps:[
   {id:"ml",lb:"Mesenteric LN Size (cm)",t:"n",ph:"cm",ht:"Dog: < 1.0cm / Cat: < 0.5cm"},
   {id:"mn",lb:"No. Enlarged",t:"n",ph:"number"},
   {id:"app",lb:"Mesenteric LN Assessment",t:"s",op:["Normal — not enlarged","Mildly enlarged < 1cm","Moderately enlarged 1-2cm","Severely enlarged > 2cm","Multiple clusters"],df:{"Mildly enlarged < 1cm":["Reactive lymphadenopathy","Early inflammation"],"Moderately enlarged 1-2cm":["Reactive — GI infection","Lymphoma","Mesenteric lymphadenitis"],"Severely enlarged > 2cm":["Multicentric lymphoma","Metastatic neoplasia","Fungal infection"],"Multiple clusters":["Multicentric lymphoma","Disseminated metastasis"]}},
@@ -246,7 +263,7 @@ var OR=[
   {id:"il",lb:"Iliac / Sublumbar LN",t:"s",op:["Normal","Enlarged — reactive","Enlarged — neoplastic","Calcified — granuloma"]},
   {id:"rem",lb:"Remarks",t:"txt",ph:"Distribution, shape, local invasion..."}
  ]},
- {id:"uter",lb:"Uterus / Ovaries",ic:"UTE",ps:[
+ {id:"uter",lb:"Uterus / Ovaries",ic:"🔴",ps:[
   {id:"sex",lb:"Patient Sex",t:"s",op:["Female — intact","Female — neutered","Male — intact","Male — neutered"]},
   {id:"ud",lb:"Uterine Horn Diameter (mm)",t:"n",ph:"mm",ht:"Normal non-gravid: < 8-10mm"},
   {id:"uc",lb:"Uterine Appearance",t:"s",op:["NA","Normal / not visible","Fluid-filled — anechoic","Fluid-filled — echogenic","Segmental enlargement","Mineralisation"],df:{"Fluid-filled — anechoic":["Mucometra","Hydrometra","Open pyometra — early"],"Fluid-filled — echogenic":["Closed pyometra","Open pyometra — thick exudate","Haemometra"],"Segmental enlargement":["CEH — cystic endometrial hyperplasia","Segmental pyometra"]}},
@@ -254,7 +271,7 @@ var OR=[
   {id:"pr",lb:"Prostate (male)",t:"s",op:["NA","Normal","Symmetric enlargement","Asymmetric — cavitation","Prostatic cysts","Mineralisation"],df:{"Symmetric enlargement":["Benign prostatic hyperplasia (BPH)","Early prostatitis"],"Asymmetric — cavitation":["Prostatic abscess","Prostatic carcinoma","Paraprostatic cyst"]}},
   {id:"rem",lb:"Remarks",t:"txt",ph:"Endometrial thickness, foetal viability..."}
  ]},
- {id:"peri",lb:"Peritoneum",ic:"EFF",ps:[
+ {id:"peri",lb:"Peritoneum",ic:"🌊",ps:[
   {id:"ff",lb:"Free Peritoneal Fluid",t:"s",op:["None","Trace — dependent areas","Mild","Moderate","Large — generalised ascites","Echogenic — haemoabdomen"],df:{"Mild":["Hypoalbuminaemia","Early peritonitis","Right-sided CHF"],"Moderate":["Hypoalbuminaemia","Peritonitis","Neoplastic effusion"],"Large — generalised ascites":["FIP peritonitis (cat)","Uroabdomen","Chylous effusion","Neoplasia"],"Echogenic — haemoabdomen":["Haemangiosarcoma rupture","Splenic rupture","Anticoagulant rodenticide","Trauma"]}},
   {id:"fc",lb:"Fluid Character",t:"s",op:["NA","Anechoic — transudate","Mildly echogenic — modified transudate","Echogenic — exudate / blood","Fibrinous strands present"]},
   {id:"gas",lb:"Free Peritoneal Gas",t:"s",op:["Absent","Present — GI perforation suspected"]},
@@ -267,14 +284,18 @@ var OR=[
 var NV=new Set(["Normal","None","Absent","NA","Not visualised","Normal bilaterally","Well distended","Normal peristalsis","Normal — 5 layers preserved","Normal — not enlarged","Not dilated","Clear — anechoic","Visualised — adequate","Normal — bilobed peanut shape","Normal — uniform","Diagnostic — complete","Diagnostic — adequate","Normal — homogeneous","Normal — isoechoic to spleen","Normal — isoechoic to mesenteric fat","Normal faecal material","Female — neutered","Male — neutered","Normal / not visible","Not visualised — normal","Normal — distinct CMD","Normal — hypoechoic rim"]);
 var isN=function(v){return !v||NV.has(v)||v.indexOf("Normal")===0||v==="None"||v==="NA"||v==="Absent"||v.indexOf("Not vis")===0||v==="Not dilated";};
 var cur=0,D={};
-for(var i=0;i<OR.length;i++){D[OR[i].id]={};}
+for(var i=0;i<OR.length;i++){
+  D[OR[i].id]={};
+  var icEl=document.getElementById("ic-"+OR[i].id);
+  if(icEl) OR[i].ic=icEl.textContent||OR[i].ic;
+}
 
 function tabs(){
   var h="";
   for(var i=0;i<OR.length;i++){
     var o=OR[i];
     var cls="t"+(i===cur?" on":"")+(D[o.id]._done?" ok":"");
-    h+='<div class="'+cls+'" onclick="go('+i+')">'+o.ic+' '+o.lb+(D[o.id]._done?' v':'')+' </div>';
+    h+='<div class="'+cls+'" onclick="go('+i+')"><img src="'+ICONS[o.id]+'" style="width:18px;height:18px;border-radius:3px;vertical-align:middle;margin-right:4px"> '+o.lb+(D[o.id]._done?' ✓':'')+' </div>';
   }
   document.getElementById("tabs-bar").innerHTML=h;
   setTimeout(function(){var el=document.querySelectorAll(".t")[cur];if(el)el.scrollIntoView({inline:"center",behavior:"smooth"});},50);
@@ -306,7 +327,7 @@ function render(){
   var sv=D[o.id]||{};
   var nv=sv._viz==="Not Visualised";
   var h='<div class="card"><div class="oh">';
-  h+='<div class="oi" style="padding:0;overflow:hidden"><img src="'+ICONS[o.id]+'" style="width:100%;height:100%;object-fit:cover;border-radius:9px" alt="'+o.ic+'"></div>';
+  h+='<div class="oi" style="overflow:hidden;padding:0"><img src="'+ICONS[o.id]+'" style="width:34px;height:34px;border-radius:9px;display:block"></div>';
   h+='<div style="flex:1"><div class="olb">'+o.lb+'</div><div class="osb">Tap fields to record findings</div></div>';
   h+='<div class="vrow">';
   h+='<button class="vb'+(nv?'':" on")+'" onclick="vizV()">Vis</button>';
@@ -464,7 +485,11 @@ function backForm(){
 }
 
 function resetAll(){
-  for(var i=0;i<OR.length;i++){D[OR[i].id]={};}
+  for(var i=0;i<OR.length;i++){
+  D[OR[i].id]={};
+  var icEl=document.getElementById("ic-"+OR[i].id);
+  if(icEl) OR[i].ic=icEl.textContent||OR[i].ic;
+}
   cur=0;
   var ids=["pt-name","pt-breed","pt-age","pt-owner","pt-contact","pt-ref","pt-mach","pt-probe","pt-case","pt-complaint","pt-wt"];
   for(var i=0;i<ids.length;i++){var el=document.getElementById(ids[i]);if(el)el.value="";}
@@ -509,8 +534,13 @@ document.getElementById("pt-date").valueAsDate=new Date();
 tabs();
 render();
 </script>
+
 <script>
-if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.getRegistrations().then(function(regs){
+    for(var i=0;i<regs.length;i++) regs[i].unregister();
+  });
+}
 </script>
 </body>
 </html>
