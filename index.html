@@ -317,7 +317,7 @@ var OR=[
 
 var NV=new Set(["Normal","None","Absent","NA","Not visualised","Normal bilaterally","Well distended","Normal peristalsis","Normal — 5 layers preserved","Normal — not enlarged","Not dilated","Clear — anechoic","Visualised — adequate","Normal — bilobed peanut shape","Normal — uniform","Diagnostic — complete","Diagnostic — adequate","Normal — homogeneous","Normal — isoechoic to spleen","Normal — isoechoic to mesenteric fat","Normal faecal material","Female — neutered","Male — neutered","Normal / not visible","Not visualised — normal","Normal — distinct CMD","Normal — hypoechoic rim"]);
 var isN=function(v){return !v||NV.has(v)||v.indexOf("Normal")===0||v==="None"||v==="NA"||v==="Absent"||v.indexOf("Not vis")===0||v==="Not dilated";};
-var cur=0,D={};
+var cur=0,D={},IMGS=[];
 for(var i=0;i<OR.length;i++){
   D[OR[i].id]={};
   var icEl=document.getElementById("ic-"+OR[i].id);
@@ -1174,7 +1174,7 @@ function setMode(m){
 }
 
 function resetAll(){
-  D={};
+  D={};IMGS=[];
   if(CUR_OR.length>0) for(var i=0;i<CUR_OR.length;i++) D[CUR_OR[i].id]={};
   cur=0;
   // Show mode screen
