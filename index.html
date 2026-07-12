@@ -98,6 +98,20 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-ser
 .sig-lbl{font-size:10px;color:var(--mgray)}
 .sig-name{font-size:11px;font-weight:700;color:var(--navy);margin-top:2px}
 .rfooter{text-align:center;font-size:9px;color:var(--mgray);margin-top:12px;padding-top:8px;border-top:.5px solid var(--lgray);line-height:1.6}
+.img-upload-box{border:2px dashed var(--lgray);border-radius:12px;padding:16px;text-align:center;cursor:pointer;margin-top:10px;transition:border-color .2s}
+.img-upload-box:active{border-color:var(--teal)}
+.img-upload-box input[type=file]{display:none}
+.img-upload-label{font-size:12px;color:var(--mgray);cursor:pointer}
+.img-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.img-thumb{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--lgray)}
+.img-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.img-thumb-del{position:absolute;top:3px;right:3px;background:rgba(198,40,40,.85);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700}
+.img-caption{font-size:10px;color:var(--mgray);text-align:center;margin-top:3px;padding:0 2px}
+/* Report image grid */
+.rep-img-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.rep-img-cell{border:1px solid var(--lgray);border-radius:8px;overflow:hidden}
+.rep-img-cell img{width:100%;display:block}
+.rep-img-cap{font-size:9px;color:var(--mgray);text-align:center;padding:4px;background:#fafafa}
 @media print{#app,#rep-bar,#gen-btn{display:none!important}#report{display:block!important;padding:0}.rpage{margin:0;border-radius:0;box-shadow:none;border:none}@page{size:A4;margin:10mm}}
 </style>
 </head>
@@ -118,14 +132,14 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-ser
       <span style="font-size:30px">🔬</span>
       <div style="text-align:left">
         <div>Abdominal Ultrasound</div>
-        <div style="font-size:11px;font-weight:400;opacity:.7;margin-top:2px">14 organs · DACVR format · Mattoon &amp; Nyland</div>
+        <div style="font-size:11px;font-weight:400;opacity:.7;margin-top:2px">14 organs · DACVR format · Canine &amp; Feline</div>
       </div>
     </button>
     <button onclick="setMode('echo')" style="width:100%;max-width:340px;background:var(--teal);color:#fff;border:none;border-radius:16px;padding:22px 20px;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:14px">
       <span style="font-size:30px">❤️</span>
       <div style="text-align:left">
         <div>Echocardiography</div>
-        <div style="font-size:11px;font-weight:400;opacity:.7;margin-top:2px">8 modules · ACVIM staging · de Madron &amp; Chetboul</div>
+        <div style="font-size:11px;font-weight:400;opacity:.7;margin-top:2px">8 modules · ACVIM staging · Canine &amp; Feline</div>
       </div>
     </button>
   </div>
@@ -417,67 +431,109 @@ function render(){
     for(var i=0;i<o.ps.length;i++) h+=field(o.id,o.ps[i],sv);
     h+='</div>';
   }
+  // Image upload section
+  var oid2=o.id;
+  h+='<div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--lgray)">';
+  h+='<div style="font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Scan Images</div>';
+  h+='<div class="img-upload-box" onclick="addImg(\''+oid2+'\')">';
+  h+='<div style="font-size:24px;margin-bottom:4px">📷</div>';
+  h+='<div class="img-upload-label">Tap to add scan image(s)</div>';
+  h+='<div style="font-size:10px;color:var(--mgray);margin-top:2px">Camera or photo library</div>';
+  h+='</div>';
+  h+='<div id="img-gallery-'+oid2+'"></div>';
+  h+='</div>';
   h+='<div class="brow">';
   if(cur>0) h+='<button class="btn bs" onclick="go('+(cur-1)+')">Back</button>';
   h+='<button class="btn bs" onclick="clr()">Clear</button>';
   h+='<button class="btn bp" onclick="done()">Save &amp; Next</button>';
   h+='</div></div>';
   document.getElementById("opanel").innerHTML=h;
+  // Restore image gallery for this organ
+  if(CUR_OR&&CUR_OR[cur]) setTimeout(function(){ renderImgGallery(CUR_OR[cur].id); },50);
 }
+function addImg(organId){
+  var input=document.createElement("input");
+  input.type="file";
+  input.accept="image/*";
+  input.multiple=true;
+  input.onchange=function(){
+    var files=Array.prototype.slice.call(input.files);
+    files.forEach(function(file){
+      var reader=new FileReader();
+      reader.onload=function(e){
+        IMGS.push({src:e.target.result,caption:organId,organId:organId});
+        renderImgGallery(organId);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+  input.click();
+}
+
+function delImg(idx){
+  IMGS.splice(idx,1);
+  // Re-render current organ gallery
+  if(CUR_OR&&CUR_OR[cur]) renderImgGallery(CUR_OR[cur].id);
+}
+
+function renderImgGallery(organId){
+  var el=document.getElementById("img-gallery-"+organId);
+  if(!el) return;
+  var organ_imgs=[];
+  for(var i=0;i<IMGS.length;i++){if(IMGS[i].organId===organId) organ_imgs.push({img:IMGS[i],idx:i});}
+  if(!organ_imgs.length){el.innerHTML="";return;}
+  var h='<div class="img-grid">';
+  for(var j=0;j<organ_imgs.length;j++){
+    var idx=organ_imgs[j].idx;
+    h+='<div>';
+    h+='<div class="img-thumb"><img src="'+organ_imgs[j].img.src+'" alt="scan">';
+    h+='<button class="img-thumb-del" onclick="delImg('+idx+')">×</button></div>';
+    h+='<div class="img-caption">'+organ_imgs[j].img.organId+'</div>';
+    h+='</div>';
+  }
+  h+='</div>';
+  el.innerHTML=h;
+}
+
 function g(id){var el=document.getElementById(id);return el?el.value||"":" ";}
 
 function genReport(){
   save();
+  if(MODE==="echo"){
+    genEchoReport();
+    return;
+  }
+  genUSGReport();
+}
+
+function genUSGReport(){
+  var g=function(id){var el=document.getElementById(id);return el?el.value||" ":" ";};
   var name=g("pt-name"),sp=g("pt-sp"),breed=g("pt-breed"),age=g("pt-age"),
       wt=g("pt-wt"),owner=g("pt-owner"),contact=g("pt-contact"),ref=g("pt-ref"),
       complaint=g("pt-complaint"),fast=g("pt-fast"),sed=g("pt-sed"),
       mach=g("pt-mach"),probe=g("pt-probe"),cno=g("pt-case"),date=g("pt-date");
 
   var logoSrc=document.getElementById("logo-el").src;
-
   var h='<div class="rpage">';
-
-  /* LETTERHEAD */
-  h+='<div class="rhead">';
-  h+='<img src="'+logoSrc+'" alt="PRADARSH">';
-  h+='<div class="rhead-title">Abdominal Ultrasound Report</div>';
-  h+='<div class="rhead-name">Dr. K.S. Saikrishna M.V.Sc, Ph.D.</div>';
-  h+='<div class="rhead-dept">Assistant Professor &amp; Head, Department of Veterinary Medicine</div>';
-  h+='<div class="rhead-dept">College of Veterinary Science, Proddatur &mdash; SVVU, Andhra Pradesh</div>';
-  h+='<div class="rhead-line"></div>';
-  h+='</div>';
-
-  /* PATIENT BOX */
-  h+='<div class="pat-sect"><div class="pat-sect-title">Patient &amp; Examination Details</div>';
-  var pf=[["Case No.",cno],["Date",date],["Patient",name],["Species / Breed",sp+" / "+breed],["Age / Sex",age],["Body Wt.",wt+" kg"],["Owner",owner],["Contact",contact],["Ref. Clinician",ref],["Indication",complaint],["Machine / Probe",mach+" / "+probe],["Fasting / Sedation",fast+" / "+sed]];
-  for(var i=0;i<pf.length;i++) h+='<div class="pat-row"><div class="pat-lbl">'+pf[i][0]+'</div><div class="pat-val">'+pf[i][1]+'</div></div>';
-  h+='</div>';
-
-  /* INTRO LINE */
+  h+=getLetterhead(logoSrc,"Abdominal Ultrasound Report",date,name,sp,breed,age,wt,owner,contact,ref,complaint,mach,probe,cno,fast,sed);
   h+='<p class="exam-intro">A complete abdominal ultrasound examination was performed on '+date+'. Patient was '+fast.toLowerCase()+'. Sedation: '+sed+'. Transducer frequency: '+probe+'.</p>';
-
-  /* FINDINGS — DACVR NARRATIVE STYLE */
   h+='<div class="sect-title">Findings</div>';
-  var allD=[],conc=[],cNum=1,hasAbn=false;
 
+  var allD=[],conc=[],cNum=1,hasAbn=false;
   for(var oi=0;oi<OR.length;oi++){
     var organ=OR[oi];
     var d=D[organ.id]||{};
     var vz=d._viz||"Visualised";
-
     if(vz==="Not Visualised"){
       h+='<div class="finding-row"><div class="finding-organ">'+organ.lb+':</div><div class="finding-text"><em>Not visualised on this examination.</em></div></div>';
       continue;
     }
-
     var hasData=false;
     for(var pi=0;pi<organ.ps.length;pi++){if(d[organ.ps[pi].id]&&organ.ps[pi].id!="_viz"){hasData=true;break;}}
     if(!hasData) continue;
-
     var parts=[],nums=[],remarks="",diffs=[];
     for(var pi=0;pi<organ.ps.length;pi++){
-      var p=organ.ps[pi];
-      var v=d[p.id];
+      var p=organ.ps[pi];var v=d[p.id];
       if(!v||p.id==="_viz") continue;
       if(p.t==="txt"){if(v.trim())remarks=v;continue;}
       var abn=!isN(v);
@@ -487,7 +543,6 @@ function genReport(){
       else if(abn){
         parts.push(v);
         if(p.df&&p.df[v]){
-          // Use selected diffs if available, else use all
           var allDD=p.df[v];
           var selDD=(d._diffs&&d._diffs[p.id]&&d._diffs[p.id].length>0)?d._diffs[p.id]:allDD.slice(0,3);
           for(var di=0;di<selDD.length;di++){diffs.push(selDD[di]);allD.push(selDD[di]);}
@@ -495,22 +550,17 @@ function genReport(){
         }
       }
     }
-
-    /* Build narrative sentence */
     var nar="";
-    if(!parts.length&&!nums.length&&!remarks){
-      nar="Unremarkable.";
-    } else {
+    if(!parts.length&&!nums.length&&!remarks){nar="Unremarkable.";}
+    else{
       if(parts.length) nar+=parts.join(". ")+". ";
       if(nums.length) nar+=(parts.length?"":"Normal; ")+nums.join("; ")+". ";
       if(remarks) nar+=remarks+". ";
       nar=nar.trim();
     }
-
     h+='<div class="finding-row"><div class="finding-organ">'+organ.lb+':</div><div class="finding-text">'+nar+'</div></div>';
   }
 
-  /* DIFFERENTIALS */
   if(allD.length){
     var uD=[];
     for(var i=0;i<allD.length;i++){if(uD.indexOf(allD[i])===-1&&uD.length<16)uD.push(allD[i]);}
@@ -519,44 +569,235 @@ function genReport(){
     for(var i=0;i<uD.length;i++) h+='<span class="diff-chip">'+uD[i]+'</span>';
     h+='</div>';
   }
+  h+=getConclusionBox(conc,hasAbn,"usg");
+  h+=getImagesSection();
+  h+=getSignature();
+  h+='</div>';
+  showReport(h);
+}
 
-  /* CONCLUSIONS — numbered DACVR style */
-  h+='<div class="imp-box">';
-  h+='<div class="imp-title"><span>Conclusions</span><button class="ai-btn" onclick="genAI()">AI Generate</button></div>';
+function genEchoReport(){
+  var g=function(id){var el=document.getElementById(id);return el?el.value||"":" ";};
+  var name=g("pt-name"),sp=g("pt-sp"),breed=g("pt-breed"),age=g("pt-age"),
+      wt=g("pt-wt"),owner=g("pt-owner"),contact=g("pt-contact"),ref=g("pt-ref"),
+      complaint=g("pt-complaint"),sed=g("pt-sed"),
+      mach=g("pt-mach"),probe=g("pt-probe"),cno=g("pt-case"),date=g("pt-date");
+
+  var logoSrc=document.getElementById("logo-el").src;
+  var h='<div class="rpage">';
+  h+=getLetterhead(logoSrc,"Echocardiography Report",date,name,sp,breed,age,wt,owner,contact,ref,complaint,mach,probe,cno,"N/A",sed);
+
+  // ── STUDY PARAMETERS ───────────────────────────────────────
+  var ds=D["echo_pt"]||{};
+  var dlv=D["echo_lv"]||{};
+  var dla=D["echo_la"]||{};
+  var dmv=D["echo_mv"]||{};
+  var drv=D["echo_rv"]||{};
+  var dpv=D["echo_pv"]||{};
+  var dav=D["echo_av"]||{};
+  var dpc=D["echo_peri"]||{};
+  var dcong=D["echo_cong"]||{};
+  var ddx=D["echo_dx"]||{};
+
+  h+='<p class="exam-intro">A complete echocardiographic examination was performed on '+date+'. Heart rate: '+(ds.hr||"—")+' bpm. Rhythm: '+(ds.rhythm||"—")+'. Sedation: '+(ds.sed||sed)+'. Image quality: '+(ds.quality||"—")+'.</p>';
+
+  // ── MEASUREMENTS TABLE ──────────────────────────────────────
+  h+='<div class="sect-title">Measurements</div>';
+  h+='<table style="width:100%;border-collapse:collapse;margin-bottom:14px;font-size:11px">';
+  h+='<tr style="background:var(--navy);color:#fff"><th style="padding:5px 8px;text-align:left">Parameter</th><th style="padding:5px 8px;text-align:center">Value</th><th style="padding:5px 8px;text-align:left">Normal Range</th><th style="padding:5px 8px;text-align:center">Status</th></tr>';
+
+  var bw=parseFloat(wt)||10;
+  var measurements=[
+    {lb:"LVd (cm)",v:dlv.lvd,norm:"1.53×BW^0.294",calc:function(w){return (1.53*Math.pow(w,0.294)).toFixed(2);},tol:0.25},
+    {lb:"LVs (cm)",v:dlv.lvs,norm:"0.95×BW^0.315",calc:function(w){return (0.95*Math.pow(w,0.315)).toFixed(2);},tol:0.25},
+    {lb:"SF (%)",v:dlv.sf,norm:"Dog:25-45%; Cat:35-65%",lo:25,hi:sp==="Feline"?65:45},
+    {lb:"EF (%)",v:dlv.ef,norm:"> 50%",lo:50,hi:100},
+    {lb:"IVSd (cm)",v:dlv.ivsd,norm:"0.41×BW^0.241",calc:function(w){return (0.41*Math.pow(w,0.241)).toFixed(2);},tol:0.2},
+    {lb:"LVFWd (cm)",v:dlv.lvfwd,norm:"0.42×BW^0.232",calc:function(w){return (0.42*Math.pow(w,0.232)).toFixed(2);},tol:0.2},
+    {lb:"Ao (cm)",v:dla.ao,norm:"0.78×BW^0.341",calc:function(w){return (0.78*Math.pow(w,0.341)).toFixed(2);},tol:0.2},
+    {lb:"LA (cm)",v:dla.la,norm:"0.76×BW^0.345",calc:function(w){return (0.76*Math.pow(w,0.345)).toFixed(2);},tol:0.2},
+    {lb:"LA:Ao",v:dla.laao,norm:"Dog:<1.3 (TM); Cat:<1.5",lo:0,hi:sp==="Feline"?1.5:1.3},
+    {lb:"RVd (cm)",v:drv.rvd,norm:"0.493×BW^0.391",calc:function(w){return (0.493*Math.pow(w,0.391)).toFixed(2);},tol:0.2},
+    {lb:"E wave (m/s)",v:dmv.e_wave,norm:"Dog:0.7-1.0; Cat:0.6-0.8",lo:sp==="Feline"?0.6:0.7,hi:sp==="Feline"?0.8:1.0},
+    {lb:"A wave (m/s)",v:dmv.a_wave,norm:"Dog:0.5-0.7; Cat:0.4-0.6",lo:sp==="Feline"?0.4:0.5,hi:sp==="Feline"?0.6:0.7},
+    {lb:"E/A ratio",v:dmv.ea_ratio,norm:"Dog:1.0-2.0; Cat:0.8-2.0",lo:sp==="Feline"?0.8:1.0,hi:2.0},
+    {lb:"Ao velocity (m/s)",v:dav.ao_vel,norm:"1.0-1.8 m/s",lo:0,hi:1.8},
+    {lb:"Pulm. velocity (m/s)",v:dpv.pv_vel,norm:"0.9-1.5 m/s",lo:0,hi:1.5},
+    {lb:"TR velocity (m/s)",v:drv.tr_vel,norm:"< 2.5 m/s (PAH if > 2.8)",lo:0,hi:2.5},
+    {lb:"SPAP (mmHg)",v:drv.spap,norm:"< 30 mmHg",lo:0,hi:30},
+    {lb:"TAPSE (cm)",v:drv.tapse,norm:"Dog: > 1.3 cm",lo:1.3,hi:99},
+    {lb:"MR velocity (m/s)",v:dmv.mr_vel,norm:"> 4.0 m/s (adequate BP)",lo:4.0,hi:99},
+  ];
+
+  for(var mi=0;mi<measurements.length;mi++){
+    var m=measurements[mi];
+    if(!m.v) continue;
+    var val=parseFloat(m.v);
+    var normTxt=m.norm;
+    var status="";var statusCol="";
+    if(m.calc){
+      var expected=parseFloat(m.calc(bw));
+      var lo2=expected*(1-m.tol);
+      var hi2=expected*(1+m.tol);
+      normTxt=m.calc(bw)+" cm (±"+Math.round(m.tol*100)+"%)";
+      if(val<lo2){status="LOW";statusCol="var(--red)";}
+      else if(val>hi2){status="HIGH";statusCol="var(--orange)";}
+      else{status="WNL";statusCol="var(--green)";}
+    } else if(m.lo!==undefined){
+      if(val<m.lo){status="LOW";statusCol="var(--red)";}
+      else if(val>m.hi){status="HIGH";statusCol="var(--orange)";}
+      else{status="WNL";statusCol="var(--green)";}
+    }
+    var rowBg=(mi%2===0)?"#fff":"#fafafa";
+    h+='<tr style="background:'+rowBg+'">';
+    h+='<td style="padding:5px 8px;font-weight:600;color:var(--navy)">'+m.lb+'</td>';
+    h+='<td style="padding:5px 8px;text-align:center;font-weight:700">'+m.v+'</td>';
+    h+='<td style="padding:5px 8px;color:var(--mgray);font-size:10px">'+normTxt+'</td>';
+    h+='<td style="padding:5px 8px;text-align:center;font-weight:700;color:'+statusCol+'">'+status+'</td>';
+    h+='</tr>';
+  }
+  h+='</table>';
+
+  // ── FINDINGS NARRATIVE ──────────────────────────────────────
+  h+='<div class="sect-title">Findings</div>';
+
+  var sections=[
+    {id:"echo_lv",lb:"Left Ventricle"},
+    {id:"echo_la",lb:"Left Atrium / Aorta"},
+    {id:"echo_mv",lb:"Mitral Valve"},
+    {id:"echo_rv",lb:"Right Ventricle"},
+    {id:"echo_pv",lb:"Pulmonic Valve"},
+    {id:"echo_av",lb:"Aortic Valve / LVOTO"},
+    {id:"echo_peri",lb:"Pericardium"},
+    {id:"echo_cong",lb:"Congenital Defects"},
+  ];
+
+  var allD2=[],conc2=[],cNum2=1,hasAbn2=false;
+
+  for(var si=0;si<sections.length;si++){
+    var sec=sections[si];
+    var dd=D[sec.id]||{};
+    var parts2=[],nums2=[],remarks2="";
+    var hasData2=false;
+    for(var pi2=0;pi2<ECHO_OR.length;pi2++){
+      if(ECHO_OR[pi2].id!==sec.id) continue;
+      var ecOrgan=ECHO_OR[pi2];
+      for(var pj=0;pj<ecOrgan.ps.length;pj++){
+        var p2=ecOrgan.ps[pj];
+        var v2=dd[p2.id];
+        if(!v2) continue;
+        if(p2.t==="txt"){if(v2.trim())remarks2=v2;hasData2=true;continue;}
+        hasData2=true;
+        var abn2=!isN(v2);
+        if(abn2) hasAbn2=true;
+        var unit2=(p2.t==="n"&&p2.ph&&(p2.ph==="cm"||p2.ph==="mm"||p2.ph==="%"||p2.ph==="bpm"||p2.ph==="mmHg"||p2.ph==="m/s"||p2.ph==="ms"||p2.ph==="ratio"))?" "+p2.ph:"";
+        if(p2.t==="n"&&v2) nums2.push(p2.lb.toLowerCase()+" "+v2+unit2);
+        else if(abn2){
+          parts2.push(v2);
+          if(p2.df&&p2.df[v2]){
+            var dd2=p2.df[v2].slice(0,3);
+            for(var dk=0;dk<dd2.length;dk++) allD2.push(dd2[dk]);
+            conc2.push({n:cNum2++,org:sec.lb,find:v2,diffs:dd2});
+          }
+        }
+      }
+    }
+    if(!hasData2) continue;
+    var nar2="";
+    if(!parts2.length&&!nums2.length&&!remarks2){nar2="Within normal limits.";}
+    else{
+      if(parts2.length) nar2+=parts2.join(". ")+". ";
+      if(nums2.length) nar2+=(parts2.length?"":"Measurements: ")+nums2.join("; ")+". ";
+      if(remarks2) nar2+=remarks2+". ";
+      nar2=nar2.trim();
+    }
+    h+='<div class="finding-row"><div class="finding-organ">'+sec.lb+':</div><div class="finding-text">'+nar2+'</div></div>';
+  }
+
+  // ── DIAGNOSIS / ACVIM ───────────────────────────────────────
+  if(ddx.primary_dx&&ddx.primary_dx.trim()&&ddx.primary_dx!=" "){
+    h+='<div class="sect-title" style="margin-top:14px">Diagnosis</div>';
+    h+='<div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px">'+ddx.primary_dx+'</div>';
+    if(ddx.stage&&ddx.stage!="NA — not DMVD"&&ddx.stage.trim()){
+      h+='<div style="font-size:11px;color:var(--teal);margin-bottom:4px">ACVIM Stage: '+ddx.stage+'</div>';
+    }
+    if(ddx.chf&&ddx.chf.trim()&&ddx.chf!=" "){
+      h+='<div style="font-size:11px;color:var(--red);margin-bottom:4px">CHF Status: '+ddx.chf+'</div>';
+    }
+  }
+
+  h+=getConclusionBox(conc2,hasAbn2,"echo");
+  h+=getImagesSection();
+  h+=getSignature();
+  h+='</div>';
+  showReport(h);
+}
+
+function getLetterhead(logoSrc,title,date,name,sp,breed,age,wt,owner,contact,ref,complaint,mach,probe,cno,fast,sed){
+  var h='<div class="rhead">';
+  h+='<img src="'+logoSrc+'" alt="PRADARSH">';
+  h+='<div class="rhead-title">'+title+'</div>';
+  h+='<div class="rhead-name">Dr. K.S. Saikrishna M.V.Sc, Ph.D.</div>';
+  h+='<div class="rhead-dept">Assistant Professor &amp; Head, Department of Veterinary Medicine</div>';
+  h+='<div class="rhead-dept">College of Veterinary Science, Proddatur &mdash; SVVU, Andhra Pradesh</div>';
+  h+='<div class="rhead-line"></div></div>';
+  h+='<div class="pat-sect"><div class="pat-sect-title">Patient &amp; Examination Details</div>';
+  var pf=[["Case No.",cno],["Date",date],["Patient",name],["Species / Breed",sp+" / "+breed],["Age / Sex",age],["Body Wt.",wt+" kg"],["Owner",owner],["Contact",contact],["Ref. Clinician",ref],["Indication",complaint],["Machine / Probe",mach+" / "+probe],["Sedation",sed]];
+  for(var i=0;i<pf.length;i++) h+='<div class="pat-row"><div class="pat-lbl">'+pf[i][0]+'</div><div class="pat-val">'+pf[i][1]+'</div></div>';
+  h+='</div>';
+  return h;
+}
+
+function getConclusionBox(conc,hasAbn,mode){
+  var h='<div class="imp-box"><div class="imp-title"><span>Conclusions</span><button class="ai-btn" onclick="genAI()">Auto Generate</button></div>';
   h+='<div class="imp-body" id="imp-body">';
   if(conc.length){
-    h+='<ol class="conc-list">';
+    h+='<ol style="padding-left:18px;margin:0">';
     for(var i=0;i<conc.length;i++){
       var c=conc[i];
       var ddtxt=c.diffs.length?" Differentials include "+c.diffs.join(" versus ")+".":"";
-      h+='<li><b>'+c.org+':</b> '+c.find+'.'+ddtxt+'</li>';
+      h+='<li style="margin-bottom:6px;line-height:1.7"><b>'+c.org+':</b> '+c.find+'.'+ddtxt+'</li>';
     }
     h+='</ol>';
   } else {
-    h+=hasAbn?"Ultrasonographic examination reveals the abnormal findings detailed above. Clinical correlation with haematology, serum biochemistry, urinalysis, and histopathology/cytology is recommended for definitive diagnosis. Ultrasonographic findings should not be interpreted in isolation.":"A complete abdominal ultrasound examination was performed. No significant ultrasonographic abnormalities were detected. All visualised organs appear within normal limits for species and age.";
+    h+=hasAbn?"Examination reveals the abnormal findings detailed above. Clinical correlation recommended.":mode==="echo"?"No significant echocardiographic abnormalities detected. All measured parameters are within normal limits for species, age, and body weight.":"No significant ultrasonographic abnormalities detected.";
   }
   h+='</div></div>';
+  h+='<div class="rec-box"><div class="rec-title">Recommendations / Follow-up</div><div class="rec-body" style="min-height:40px"></div></div>';
+  return h;
+}
 
-  /* RECOMMENDATIONS */
-  h+='<div class="rec-box"><div class="rec-title">Recommendations / Follow-up</div><div class="rec-body"></div></div>';
+function getImagesSection(){
+  if(!IMGS.length) return "";
+  var h='<div class="sect-title" style="margin-top:14px">Scan Images</div>';
+  h+='<div class="rep-img-grid">';
+  for(var ii=0;ii<IMGS.length;ii++){
+    h+='<div class="rep-img-cell">';
+    h+='<img src="'+IMGS[ii].src+'" alt="scan image '+(ii+1)+'">';
+    h+='<div class="rep-img-cap">'+IMGS[ii].caption+' — Image '+(ii+1)+'</div>';
+    h+='</div>';
+  }
+  h+='</div>';
+  return h;
+}
 
-  /* SIGNATURE */
-  h+='<div class="sig-row">';
+function getSignature(){
+  var h='<div class="sig-row">';
   h+='<div class="sig-blk"><div class="sig-line"></div><div class="sig-lbl">Sonographer</div></div>';
   h+='<div class="sig-blk"><div class="sig-line"></div><div class="sig-lbl">Reporting Clinician</div><div class="sig-name">Dr. K.S. Saikrishna M.V.Sc, Ph.D.</div><div style="font-size:9px;color:var(--mgray)">Dept. of Veterinary Medicine &middot; CVSc Proddatur &middot; SVVU</div></div>';
   h+='<div class="sig-blk"><div class="sig-line"></div><div class="sig-lbl">Date &amp; Time</div></div>';
   h+='</div>';
+  h+='<div class="rfooter">PRADARSH &middot; Veterinary Ultrasonography &amp; Echocardiography Reporting System</div>';
+  return h;
+}
 
-  h+='<div class="rfooter">PRADARSH &middot; AI-Powered Veterinary USG Reporting System<br>Reference: Mattoon &amp; Nyland, Small Animal Diagnostic Ultrasound 3e (Saunders 2015) &middot; ACVIM Consensus Guidelines 2019</div>';
-  h+='</div>';
-
+function showReport(h){
   document.getElementById("report").innerHTML=h;
   document.getElementById("app").style.display="none";
   document.getElementById("rep-bar").style.display="flex";
   document.getElementById("report").style.display="block";
   window.scrollTo(0,0);
 }
-
 function backForm(){
   document.getElementById("report").style.display="none";
   document.getElementById("rep-bar").style.display="none";
@@ -721,7 +962,7 @@ function getRec(organId, finding){
 
 // ═══════════════════════════════════════════════════════════════
 // ECHO MODULE — Clinical Echocardiography of the Dog and Cat
-// Reference: de Madron, Chetboul, Bussadori (Elsevier 2015)
+// 
 // Allometric formulae: Cornell et al. (n=494 dogs); TM values
 // ═══════════════════════════════════════════════════════════════
 
