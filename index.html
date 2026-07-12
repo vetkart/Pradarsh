@@ -324,27 +324,17 @@ for(var i=0;i<OR.length;i++){
   if(icEl) OR[i].ic=icEl.textContent||OR[i].ic;
 }
 
-function tabs(){
-  var h="";
-  for(var i=0;i<OR.length;i++){
-    var o=OR[i];
-    var cls="t"+(i===cur?" on":"")+(D[o.id]._done?" ok":"");
-    h+='<div class="'+cls+'" onclick="go('+i+')"><img src="'+ICONS[o.id]+'" style="width:18px;height:18px;border-radius:3px;vertical-align:middle;margin-right:4px"> '+o.lb+(D[o.id]._done?' ✓':'')+' </div>';
-  }
-  document.getElementById("tabs-bar").innerHTML=h;
-  setTimeout(function(){var el=document.querySelectorAll(".t")[cur];if(el)el.scrollIntoView({inline:"center",behavior:"smooth"});},50);
-}
-function save(){
-  var o=OR[cur];
-  for(var i=0;i<o.ps.length;i++){
-    var el=document.getElementById("f"+o.id+o.ps[i].id);
-    if(el) D[o.id][o.ps[i].id]=el.value;
-  }
-}
 
-function go(i){save();cur=i;tabs();render();document.getElementById("body").scrollTop=0;}
-function done(){save();D[OR[cur].id]._done=true;if(cur<OR.length-1)cur++;tabs();render();document.getElementById("body").scrollTo(0,0);}
-function clr(){D[OR[cur].id]={};render();}
+
+
+
+
+
+
+
+
+
+
 function vizV(){save();D[OR[cur].id]._viz="Visualised";render();}
 function vizN(){save();D[OR[cur].id]._viz="Not Visualised";render();}
 
@@ -413,44 +403,8 @@ function toggleDiff(oid, pid, diff, checked){
   if(!checked && idx>-1) arr.splice(idx,1);
 }
 
-function render(){
-  var o=OR[cur];
-  var sv=D[o.id]||{};
-  var nv=sv._viz==="Not Visualised";
-  var h='<div class="card"><div class="oh">';
-  h+='<div class="oi" style="overflow:hidden;padding:0"><img src="'+ICONS[o.id]+'" style="width:34px;height:34px;border-radius:9px;display:block"></div>';
-  h+='<div style="flex:1"><div class="olb">'+o.lb+'</div><div class="osb">Tap fields to record findings</div></div>';
-  h+='<div class="vrow">';
-  h+='<button class="vb'+(nv?'':" on")+'" onclick="vizV()">Vis</button>';
-  h+='<button class="vb nb'+(nv?' on':'')+'" onclick="vizN()">NV</button>';
-  h+='</div></div>';
-  if(nv){
-    h+='<div class="nv-msg">Not Visualised &mdash; organ not assessable</div>';
-  } else {
-    h+='<div class="fg">';
-    for(var i=0;i<o.ps.length;i++) h+=field(o.id,o.ps[i],sv);
-    h+='</div>';
-  }
-  // Image upload section
-  var oid2=o.id;
-  h+='<div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--lgray)">';
-  h+='<div style="font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Scan Images</div>';
-  h+='<div class="img-upload-box" onclick="addImg(\''+oid2+'\')">';
-  h+='<div style="font-size:24px;margin-bottom:4px">📷</div>';
-  h+='<div class="img-upload-label">Tap to add scan image(s)</div>';
-  h+='<div style="font-size:10px;color:var(--mgray);margin-top:2px">Camera or photo library</div>';
-  h+='</div>';
-  h+='<div id="img-gallery-'+oid2+'"></div>';
-  h+='</div>';
-  h+='<div class="brow">';
-  if(cur>0) h+='<button class="btn bs" onclick="go('+(cur-1)+')">Back</button>';
-  h+='<button class="btn bs" onclick="clr()">Clear</button>';
-  h+='<button class="btn bp" onclick="done()">Save &amp; Next</button>';
-  h+='</div></div>';
-  document.getElementById("opanel").innerHTML=h;
-  // Restore image gallery for this organ
-  if(CUR_OR&&CUR_OR[cur]) setTimeout(function(){ renderImgGallery(CUR_OR[cur].id); },50);
-}
+
+
 function addImg(organId){
   var input=document.createElement("input");
   input.type="file";
