@@ -498,36 +498,145 @@ function resetAll(){
   document.getElementById("body").scrollTo(0,0);
 }
 
-async function genAI(){
+function genAI(){
   var btn=document.querySelector(".ai-btn");
   var box=document.getElementById("imp-body");
   if(!btn||!box) return;
-  btn.textContent="Generating...";btn.disabled=true;
-  box.innerHTML="<em style='color:var(--mgray)'>Generating clinical conclusions...</em>";
-  var fnd=[];
-  for(var oi=0;oi<OR.length;oi++){
-    var organ=OR[oi];var d=D[organ.id]||{};
-    if(d._viz==="Not Visualised"){fnd.push(organ.lb+": Not visualised");continue;}
-    for(var pi=0;pi<organ.ps.length;pi++){
-      var p=organ.ps[pi];var v=d[p.id];
-      if(!v||p.t==="txt"||p.id==="_viz")continue;
-      if(!isN(v))fnd.push(organ.lb+" - "+p.lb+": "+v);
-    }
-  }
+  btn.textContent="Generating...";
+  btn.disabled=true;
+
   var sp=document.getElementById("pt-sp").value||"Canine";
   var breed=document.getElementById("pt-breed").value||"";
   var age=document.getElementById("pt-age").value||"";
-  var prompt="You are a veterinary radiologist (DACVR). Write 3-5 numbered conclusions for a "+sp+(breed?" ("+breed+")":"")+(age?", "+age:"")+".\n\nFindings:\n"+(fnd.length?fnd.join("\n"):"No significant abnormalities.")+"\n\nEach conclusion: state the key finding, most likely diagnosis, brief differentials. Be concise and clinical. Numbered list only.";
-  try{
-    var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:400,messages:[{role:"user",content:prompt}]})});
-    var data=await res.json();
-    var txt=(data.content&&data.content[0])?data.content[0].text:"Unable to generate.";
-    box.innerHTML="<div style='white-space:pre-line;line-height:1.8;font-size:12px'>"+txt+"</div><div style='font-size:9px;color:var(--mgray);margin-top:6px'>AI-generated &middot; Clinical correlation recommended</div>";
-    btn.textContent="Regenerate";btn.disabled=false;
-  }catch(e){
-    box.innerHTML="AI generation failed. Please write conclusions manually.";
-    btn.textContent="AI Generate";btn.disabled=false;
+  var name=document.getElementById("pt-name").value||"the patient";
+
+  // Collect all abnormal findings with their differentials
+  var findings=[];
+  var cNum=1;
+  var conclusions=[];
+
+  for(var oi=0;oi<OR.length;oi++){
+    var organ=OR[oi];
+    var d=D[organ.id]||{};
+    var viz=d._viz||"Visualised";
+    if(viz==="Not Visualised") continue;
+
+    for(var pi=0;pi<organ.ps.length;pi++){
+      var p=organ.ps[pi];
+      var v=d[p.id];
+      if(!v||p.t==="txt"||p.id==="_viz") continue;
+      if(isN(v)) continue;
+
+      // Build conclusion for each abnormal finding
+      var conc="";
+      var unit=(p.t==="n"&&p.ph&&(p.ph==="cm"||p.ph==="mm"))?" "+p.ph:"";
+
+      if(p.t==="n"){
+        // Numeric value — compare to normal
+        var val=parseFloat(v);
+        conc=organ.lb+": "+p.lb+" measures "+v+unit+".";
+      } else {
+        // Dropdown finding
+        conc=organ.lb+": "+v+".";
+        // Add differentials if available
+        if(p.df&&p.df[v]){
+          var dd=p.df[v].slice(0,3);
+          conc+=" Differentials include "+dd.join(" versus ")+".";
+          // Add recommendation based on finding type
+          var rec=getRec(organ.id,v);
+          if(rec) conc+=" "+rec;
+        }
+      }
+
+      if(conc){
+        conclusions.push(cNum+". "+conc);
+        cNum++;
+      }
+    }
   }
+
+  var output="";
+  if(conclusions.length===0){
+    output="No significant ultrasonographic abnormalities detected. All visualised abdominal organs appear within normal limits for a "+sp+(breed?" ("+breed+")":"")+(age?", aged "+age:"")+". Clinical correlation with physical examination findings is recommended.";
+  } else {
+    // Intro sentence
+    output='Ultrasonographic examination of '+name+', a '+sp+(breed?' ('+breed+')':'')+(age?', aged '+age:'')+', reveals the following significant findings:\n\n';
+    output+=conclusions.join('\n\n');
+    output+='\n\nCorrelation with haematology, serum biochemistry, urinalysis, and where indicated histopathology or cytology is recommended for definitive diagnosis.';  }
+
+  box.innerHTML='<div style="white-space:pre-line;line-height:1.9;font-size:12px">'+output+'</div><div style="font-size:9px;color:var(--mgray);margin-top:8px;border-top:1px solid var(--lgray);padding-top:6px">Auto-generated from entered findings &middot; Clinical correlation recommended &middot; PRADARSH v1.0</div>';
+  btn.textContent="Regenerate";
+  btn.disabled=false;
+}
+
+function getRec(organId, finding){
+  var f=finding.toLowerCase();
+  // Liver
+  if(organId==="liver"){
+    if(f.indexOf("hepatomegaly")>-1) return "Hepatic biochemistry panel and bile acids recommended.";
+    if(f.indexOf("mass")>-1||f.indexOf("nodule")>-1) return "Fine needle aspirate or ultrasound-guided biopsy recommended.";
+    if(f.indexOf("lipidosis")>-1) return "Hepatic lipidosis protocol — nutritional support indicated (cats).";
+    if(f.indexOf("mucocoele")>-1) return "Surgical consultation recommended.";
+  }
+  // Gall bladder
+  if(organId==="gb"){
+    if(f.indexOf("mucocoele")>-1) return "Surgical cholecystectomy recommended — monitor for rupture.";
+    if(f.indexOf("sludge")>-1) return "Ursodeoxycholic acid therapy and dietary management recommended.";
+  }
+  // Kidney
+  if(organId==="rk"||organId==="lk"){
+    if(f.indexOf("hydronephrosis")>-1) return "Ureteral obstruction must be ruled out — ureteral stenting may be indicated.";
+    if(f.indexOf("calculi")>-1) return "Urinalysis, urine culture, and metabolic workup recommended.";
+    if(f.indexOf("renal failure")>-1) return "IRIS staging and renal protocol management recommended.";
+    if(f.indexOf("lymphoma")>-1) return "Renal cytology and oncology consultation recommended.";
+  }
+  // Bladder
+  if(organId==="ub"){
+    if(f.indexOf("tcc")>-1||f.indexOf("transitional")>-1) return "Urine cytology, BRAF mutation test, and cystoscopy recommended.";
+    if(f.indexOf("urolithiasis")>-1) return "Stone analysis, dietary modification, and urinary acidifier/alkaliniser as appropriate.";
+    if(f.indexOf("cystitis")>-1) return "Urine culture and sensitivity, appropriate antibiotic therapy.";
+  }
+  // Spleen
+  if(organId==="spleen"){
+    if(f.indexOf("haemangiosarcoma")>-1||f.indexOf("cavitary")>-1) return "Emergency surgical splenectomy recommended. Chest radiographs for metastatic screening.";
+    if(f.indexOf("lymphoma")>-1) return "Splenic aspirate and oncology consultation recommended.";
+    if(f.indexOf("mass")>-1) return "Surgical splenectomy and histopathology recommended.";
+  }
+  // Adrenal
+  if(organId==="adr"){
+    if(f.indexOf("pdh")>-1||f.indexOf("bilateral")>-1) return "ACTH stimulation test and low dose dexamethasone suppression test recommended.";
+    if(f.indexOf("nodule")>-1||f.indexOf("unilateral")>-1) return "Adrenal function testing and surgical adrenalectomy consultation recommended.";
+    if(f.indexOf("phaeochromocytoma")>-1) return "Blood pressure monitoring and alpha blockade prior to any surgical intervention.";
+  }
+  // Pancreas
+  if(organId==="pan"){
+    if(f.indexOf("pancreatitis")>-1) return "Fasting, IV fluid support, analgesia, and PLI assay recommended.";
+    if(f.indexOf("insulinoma")>-1) return "Blood glucose curve and surgical consultation recommended.";
+    if(f.indexOf("epi")>-1) return "TLI assay confirmation and pancreatic enzyme supplementation.";
+  }
+  // GI
+  if(organId==="si"||organId==="stomach"||organId==="li"){
+    if(f.indexOf("lymphoma")>-1) return "Full thickness biopsy via endoscopy or laparotomy recommended for definitive diagnosis.";
+    if(f.indexOf("foreign body")>-1||f.indexOf("obstruction")>-1) return "Surgical or endoscopic retrieval recommended urgently.";
+    if(f.indexOf("intussusception")>-1) return "Emergency surgical intervention recommended.";
+  }
+  // Uterus
+  if(organId==="uter"){
+    if(f.indexOf("pyometra")>-1) return "Emergency ovariohysterectomy recommended. IV antibiotics and fluid stabilisation prior to surgery.";
+    if(f.indexOf("ceh")>-1) return "Ovariohysterectomy recommended. Progesterone levels to be assessed.";
+  }
+  // Peritoneum
+  if(organId==="peri"){
+    if(f.indexOf("haemoabdomen")>-1) return "Emergency exploratory laparotomy recommended. Blood typing and cross-matching advised.";
+    if(f.indexOf("large")>-1||f.indexOf("generalised")>-1) return "Abdominocentesis for fluid analysis — cytology, protein, culture recommended.";
+    if(f.indexOf("fip")>-1) return "FIP RivTas/PCR testing and antiviral therapy (GS-441524) consultation.";
+  }
+  // Lymph nodes
+  if(organId==="ln"){
+    if(f.indexOf("lymphoma")>-1||f.indexOf("severely")>-1) return "Fine needle aspirate for cytology and flow cytometry recommended.";
+    if(f.indexOf("metastatic")>-1) return "Primary tumour identification and oncology staging recommended.";
+  }
+  return "";
 }
 
 document.getElementById("pt-date").valueAsDate=new Date();
