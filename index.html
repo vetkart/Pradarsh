@@ -28,6 +28,8 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-ser
 .login-field select option{background:var(--navy);color:#fff}
 .login-btn{width:100%;padding:14px;background:var(--gold);color:var(--navy);border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;margin-top:6px;letter-spacing:.5px}
 .login-btn:active{opacity:.85}
+.login-field input.error{border-color:#e53935;animation:shake .3s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 .login-footer{font-size:10px;color:rgba(255,255,255,0.3);margin-top:20px;text-align:center}
 .user-chip{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);border-radius:20px;padding:4px 10px 4px 6px;cursor:pointer}
 .user-avatar{width:24px;height:24px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--navy);flex-shrink:0}
@@ -157,6 +159,10 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-ser
     <div class="login-field">
       <label>Department</label>
       <input id="login-dept" placeholder="e.g. Dept. of Veterinary Medicine" autocomplete="off">
+    </div>
+    <div class="login-field">
+      <label>Access Code</label>
+      <input id="login-code" type="password" placeholder="Enter access code" autocomplete="off">
     </div>
     <button class="login-btn" onclick="doLogin()">Enter PRADARSH →</button>
   </div>
@@ -1255,6 +1261,8 @@ var ECHO_OR=[
   {id:"diast",lb:"Diastolic Function",t:"s",op:["Normal","Grade I — Delayed relaxation (E/A < 1)","Grade II — Pseudonormal (E/A 1-2, elevated LVFP)","Grade III — Restrictive (E/A > 2, short DTE)"],
    df:{"Grade I — Delayed relaxation (E/A < 1)":["Early diastolic dysfunction","Hypertensive heart disease","Early HCM (cat)","Ageing — normal variant in older animals"],"Grade II — Pseudonormal (E/A 1-2, elevated LVFP)":["Moderate diastolic dysfunction","Elevated LVFP — TDI E/E' > 10 confirms"],"Grade III — Restrictive (E/A > 2, short DTE)":["Severe diastolic dysfunction","Restrictive cardiomyopathy (cat)","Advanced HCM","Elevated left atrial pressure — CHF risk"]}},
   {id:"dte",lb:"DTE — E wave Deceleration Time (ms)",t:"n",ph:"ms",ht:"Dog: 60-100 ms; Short DTE <60 ms = restrictive physiology; elevated LVFP"},
+  {id:"mv_vti",lb:"Mitral VTI (cm)",t:"n",ph:"cm",ht:"Dog: 8-15 cm; elevated in MR or high filling volumes"},
+  {id:"mr_vti",lb:"MR VTI (cm)",t:"n",ph:"cm",ht:"Regurgitant fraction = MR VTI area / (MR VTI + LVOT VTI); RF>50% = severe MR"},
   {id:"rem",lb:"Remarks",t:"txt",ph:"PISA radius, regurgitant fraction, vena contracta, EROA..."}
 ]},
 
@@ -1272,6 +1280,7 @@ var ECHO_OR=[
   {id:"tapse",lb:"TAPSE — Tricuspid Annular Plane Systolic Excursion (cm)",t:"n",ph:"cm",ht:"Dog normal: > 1.3 cm; Reduced = RV systolic dysfunction"},
   {id:"tr_e",lb:"Tricuspid E wave (m/s)",t:"n",ph:"m/s",ht:"Dog: 0.72±0.11 m/s (0.50-0.98); Cat: ND"},
   {id:"tr_a",lb:"Tricuspid A wave (m/s)",t:"n",ph:"m/s",ht:"Dog: 0.43±0.09 m/s (0.29-0.70)"},
+  {id:"tr_vti",lb:"TR VTI (cm)",t:"n",ph:"cm",ht:"Used with TR velocity for RVSP and RV stroke work calculation"},
   {id:"rem",lb:"Remarks",t:"txt",ph:"RV free wall thickness, paradoxical septal motion, D-sign..."}
 ]},
 
@@ -1283,6 +1292,7 @@ var ECHO_OR=[
   {id:"pv_pg",lb:"Pulmonic Peak Gradient (mmHg)",t:"n",ph:"mmHg",ht:"4×V²; Mild PS: <50 mmHg; Moderate: 50-80 mmHg; Severe: >80 mmHg — intervention indicated"},
   {id:"at_et",lb:"AT/ET Ratio (Pulmonic Flow)",t:"n",ph:"ratio",ht:"Normal: > 0.31; Reduced AT/ET with notching = PAH; < 0.31 suggests elevated MPAP"},
   {id:"mpa",lb:"Main Pulmonary Artery",t:"s",op:["Normal diameter","Mildly dilated","Moderately dilated — PAH / PS","Severely dilated — chronic PAH","Not well visualised"]},
+  {id:"pv_vti",lb:"Pulmonic VTI (cm)",t:"n",ph:"cm",ht:"Dog: 10-20 cm; Qp VTI; if >> LVOT VTI = left-to-right shunt"},
   {id:"rem",lb:"Remarks",t:"txt",ph:"Infundibular hypertrophy, right atrial enlargement, post-stenotic dilation..."}
 ]},
 
@@ -1294,6 +1304,11 @@ var ECHO_OR=[
   {id:"ao_pg",lb:"Aortic Peak Gradient (mmHg)",t:"n",ph:"mmHg",ht:"4×V²; Mild SAS: <50 mmHg; Moderate: 50-80 mmHg; Severe: >80 mmHg — significant risk of sudden death"},
   {id:"ar",lb:"Aortic Regurgitation",t:"s",op:["None","Trivial / physiological","Mild AR","Moderate AR","Severe AR"],
    df:{"Moderate AR":["DMVD with aortic involvement","Endocarditis","SAS — secondary AR","Congenital bicuspid aortic valve"],"Severe AR":["Endocarditis — severe leaflet destruction","Significant volume overload"]}},
+  {id:"lvot_vti",lb:"LVOT VTI (cm)",t:"n",ph:"cm",ht:"Dog: 14-25 cm; Cat: 10-20 cm; Used to calculate stroke volume"},
+  {id:"lvot_d",lb:"LVOT Diameter (cm)",t:"n",ph:"cm",ht:"Dog: ~0.75×BW^0.33; Cat: 0.7-0.9 cm; Measure in PLAX view"},
+  {id:"ao_vti",lb:"Aortic VTI (cm)",t:"n",ph:"cm",ht:"Dog: 14-25 cm; reflects stroke distance"},
+  {id:"sv",lb:"Stroke Volume (mL)",t:"n",ph:"mL",ht:"SV = VTI × π × (LVOTØ/2)²; ~1.5-2.5 mL/kg"},
+  {id:"co",lb:"Cardiac Output (L/min)",t:"n",ph:"L/min",ht:"CO = SV × HR; Normal ~100-200 mL/kg/min"},
   {id:"rem",lb:"Remarks",t:"txt",ph:"AT/ET ratio, mean gradient, LVOTO diameter..."}
 ]},
 
@@ -1319,6 +1334,7 @@ var ECHO_OR=[
   {id:"vsd_vel",lb:"VSD Jet Velocity (m/s)",t:"n",ph:"m/s",ht:"Small restrictive VSD: 4.5-5.5 m/s (high velocity = small VSD); Large VSD: low velocity = high pulmonary pressure"},
   {id:"asd",lb:"Atrial Septal Defect (ASD)",t:"s",op:["Absent","ASD suspected — echo dropout","ASD — colour Doppler left-to-right flow confirmed","ASD — large with RV volume overload"],
    df:{"ASD — colour Doppler left-to-right flow confirmed":["ASD — Samoyed, Dobermann predisposed","Amplatzer septal occluder — interventional option"]}},
+  {id:"qp_qs",lb:"Qp:Qs Ratio",t:"n",ph:"ratio",ht:"Normal 1:1; >1.5 = significant L-to-R shunt; >2.0 = large shunt"},
   {id:"rem",lb:"Remarks",t:"txt",ph:"Shunt direction, Qp:Qs ratio, pulmonary vascular resistance..."}
 ]},
 
@@ -1433,13 +1449,32 @@ var ECHO_OR=[
 var MODE=""; // "usg" or "echo"
 var CUR_OR=[]; // active organ array
 
+// Access codes - add or remove as needed
+var ACCESS_CODES = [
+  "PRADARSH2025",   // Master code
+  "CVSc2025",       // Alternate code
+  "VetUSG"          // Short code
+];
+
 function doLogin(){
   var name=document.getElementById("login-name").value.trim();
   var qual=document.getElementById("login-qual").value.trim();
   var desig=document.getElementById("login-desig").value.trim();
   var inst=document.getElementById("login-inst").value.trim();
   var dept=document.getElementById("login-dept").value.trim();
+  var code=document.getElementById("login-code").value.trim();
   if(!name){alert("Please enter your name.");return;}
+  if(!code){alert("Please enter the access code.");return;}
+  // Check access code
+  var valid=false;
+  for(var i=0;i<ACCESS_CODES.length;i++){
+    if(code===ACCESS_CODES[i]){valid=true;break;}
+  }
+  if(!valid){
+    alert("Invalid access code. Please contact Dr. K.S. Saikrishna for access.");
+    document.getElementById("login-code").value="";
+    return;
+  }
   DOCTOR.name=name;
   DOCTOR.qual=qual||"";
   DOCTOR.desig=desig||"";
