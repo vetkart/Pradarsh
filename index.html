@@ -262,12 +262,17 @@ var OR=[
   {id:"ms",lb:"Focal Lesion / Mass",t:"s",op:["None","Single nodule < 1cm","Single mass > 1cm","Multiple nodules","Diffuse nodularity"],df:{"Single nodule < 1cm":["Nodular hyperplasia","Hepatic adenoma","Early HCC"],"Single mass > 1cm":["Hepatocellular carcinoma","Cholangiocellular carcinoma","Abscess","Haematoma"],"Multiple nodules":["Metastatic neoplasia","Nodular hyperplasia (old dog)","Multifocal abscesses"],"Diffuse nodularity":["Hepatic lymphoma","Diffuse neoplasia","Mast cell tumour (cat)"]}},
   {id:"bi",lb:"Biliary System",t:"s",op:["Normal","Bile duct dilation","Cholelithiasis","Biliary sludge","Mucocoele pattern","Cholecystitis signs"]},
   {id:"span",lb:"Liver Span (cm)",t:"n",ph:"cm",ht:"Dog: 8-15cm / Cat: 4-7cm"},
+  {id:"pvd",lb:"Portal Vein Diameter (cm)",t:"n",ph:"cm",ht:"Dog: 0.5-1.3 cm; Dilated >1.3 cm = portal hypertension"},
+  {id:"hvd",lb:"Hepatic Vein Diameter (cm)",t:"n",ph:"cm",ht:"Dilated hepatic veins = right-sided CHF / hepatic congestion"},
+  {id:"cbd_d",lb:"Common Bile Duct Diameter (cm)",t:"n",ph:"cm",ht:"Dog: <0.3 cm; Cat: <0.4 cm; Dilated = cholestasis / obstruction"},
   {id:"rem",lb:"Remarks",t:"txt",ph:"Portal hypertension signs, Doppler findings, lobe affected..."}
  ]},
  {id:"gb",lb:"Gall Bladder",ic:"🟡",ps:[
   {id:"sz",lb:"GB Size",t:"s",op:["Normal","Mildly distended","Markedly distended","Small / contracted"]},
   {id:"wl",lb:"Wall Thickness",t:"s",op:["Normal < 1mm","Mild thickening 1-3mm","Marked thickening > 3mm","Striated / oedematous wall"],df:{"Mild thickening 1-3mm":["Cholecystitis","Hypoalbuminaemia","Adjacent hepatitis"],"Marked thickening > 3mm":["Severe cholecystitis","Biliary mucocoele","Neoplasia"]}},
   {id:"ct",lb:"GB Content",t:"s",op:["Anechoic — normal bile","Biliary sludge","Cholelithiasis — acoustic shadowing","Mucocoele — stellate pattern","Haemobilia"],df:{"Biliary sludge":["Cholestasis","Prolonged anorexia","Haemolytic disease"],"Cholelithiasis — acoustic shadowing":["Choleliths","Cholelithiasis with obstruction"],"Mucocoele — stellate pattern":["Biliary mucocoele — surgical emergency"]}},
+  {id:"gb_wt",lb:"GB Wall Thickness (mm)",t:"n",ph:"mm",ht:"Normal: <1 mm; Thickened >3 mm = cholecystitis / mucocoele"},
+  {id:"gb_len",lb:"GB Length (cm)",t:"n",ph:"cm",ht:"Dog: 2-5 cm; Distended >6 cm = obstruction / mucocoele"},
   {id:"cbd",lb:"CBD Diameter (mm)",t:"n",ph:"mm",ht:"Dog: < 3mm / Cat: < 4mm"},
   {id:"rem",lb:"Remarks",t:"txt",ph:"GB wall vascularity, cystic duct appearance..."}
  ]},
@@ -275,6 +280,9 @@ var OR=[
   {id:"sz",lb:"Spleen Size",t:"s",op:["Normal","Splenomegaly — mild","Splenomegaly — moderate","Splenomegaly — severe","Reduced"],df:{"Splenomegaly — mild":["Reactive splenomegaly","Splenic congestion","Sedation artefact"],"Splenomegaly — moderate":["Extramedullary haematopoiesis","Splenic lymphoma","Haemangiosarcoma"],"Splenomegaly — severe":["Haemangiosarcoma","Mast cell tumour","Splenic lymphoma","Splenic torsion"]}},
   {id:"ec",lb:"Echogenicity",t:"s",op:["Normal — homogeneous","Hyperechoic — diffuse","Hypoechoic — diffuse","Focal hypoechoic lesion","Mixed / heterogeneous"],df:{"Hypoechoic — diffuse":["Splenic lymphoma","Acute congestion","Leukaemia"],"Focal hypoechoic lesion":["Haematoma","Splenic cyst","Abscess","Haemangiosarcoma"],"Mixed / heterogeneous":["Haemangiosarcoma","Splenic sarcoma","Complex haematoma"]}},
   {id:"ms",lb:"Focal Lesion",t:"s",op:["None","Nodule < 1cm","Mass 1-3cm","Mass > 3cm","Cavitary lesion"],df:{"Mass 1-3cm":["Haemangiosarcoma","Haematoma","Mast cell tumour"],"Mass > 3cm":["Haemangiosarcoma (dog)","Mast cell tumour (cat)","Sarcoma"],"Cavitary lesion":["Haemangiosarcoma — cavitary","Abscess","Organised haematoma"]}},
+  {id:"s_len",lb:"Spleen Length (cm)",t:"n",ph:"cm",ht:"Dog: 5-15 cm (BW dependent); Cat: 4-8 cm"},
+  {id:"s_wid",lb:"Spleen Width (cm)",t:"n",ph:"cm",ht:"Dog: 1-4 cm; Cat: 0.5-2.5 cm"},
+  {id:"svd",lb:"Splenic Vein Diameter (cm)",t:"n",ph:"cm",ht:"Dilated = portal hypertension"},
   {id:"ef",lb:"Peritoneal Effusion Near",t:"s",op:["None","Trace","Moderate","Large — haemoperitoneum suspected"]},
   {id:"rem",lb:"Remarks",t:"txt",ph:"Splenic torsion signs, hilar vascularity..."}
  ]},
@@ -302,6 +310,9 @@ var OR=[
   {id:"dist",lb:"Distension",t:"s",op:["Well distended","Moderately filled","Poorly distended","Over-distended — obstruction","Collapsed — rupture suspected"]},
   {id:"wl",lb:"Wall Thickness",t:"s",op:["Normal < 2mm","Diffuse thickening 2-4mm","Diffuse thickening > 4mm","Focal thickening","Polypoid mass"],df:{"Diffuse thickening 2-4mm":["Bacterial cystitis","Haemorrhagic cystitis","Feline idiopathic cystitis"],"Focal thickening":["Transitional cell carcinoma (TCC)","Inflammatory polyp","Granuloma"],"Polypoid mass":["TCC","Benign polyp"]}},
   {id:"ct",lb:"Contents",t:"s",op:["Clear — anechoic","Echogenic sediment","Urolithiasis — shadowing","Blood clots","Gas — emphysematous cystitis"],df:{"Echogenic sediment":["Crystalluria","Haemorrhagic cystitis"],"Urolithiasis — shadowing":["Struvite uroliths","Calcium oxalate uroliths","Urate uroliths"],"Blood clots":["Haemorrhagic cystitis","TCC bleeding","Coagulopathy"]}},
+  {id:"ub_wt",lb:"Bladder Wall Thickness (mm)",t:"n",ph:"mm",ht:"Distended bladder: <2 mm normal; >3 mm = cystitis / neoplasia"},
+  {id:"ub_len",lb:"Bladder Length (cm)",t:"n",ph:"cm"},
+  {id:"ub_wid",lb:"Bladder Width (cm)",t:"n",ph:"cm"},
   {id:"trig",lb:"Trigone",t:"s",op:["Normal","Mass at trigone — TCC suspected","Thickening at trigone","Calculi at trigone"]},
   {id:"rem",lb:"Remarks",t:"txt",ph:"Wall vascularity, ureteral jets..."}
  ]},
@@ -316,6 +327,10 @@ var OR=[
  {id:"si",lb:"Small Intestine",ic:"〰",ps:[
   {id:"wt",lb:"Wall Thickness (mm)",t:"n",ph:"mm",ht:"Dog: < 5mm / Cat: < 2.5mm"},
   {id:"wl",lb:"Wall Layering",t:"s",op:["Normal — 5 layers preserved","Focal loss of layering","Diffuse loss of layering","Diffuse thickening — preserved layers","Focal thickening — preserved layers"],df:{"Focal loss of layering":["GI adenocarcinoma","High-grade lymphoma — focal","Leiomyosarcoma"],"Diffuse loss of layering":["High-grade lymphoma","Diffuse infiltrative neoplasia"],"Diffuse thickening — preserved layers":["IBD — lymphoplasmacytic","Small cell lymphoma (cat)","Protein-losing enteropathy"]}},
+  {id:"si_muc",lb:"Mucosal Layer Thickness (mm)",t:"n",ph:"mm",ht:"Dog: 1.0-1.5 mm; Cat: 0.5-1.0 mm"},
+  {id:"si_sub",lb:"Submucosal Layer (mm)",t:"n",ph:"mm",ht:"Dog: 0.5-1.0 mm; Thickened submucosa = lymphangiectasia / oedema"},
+  {id:"si_mus",lb:"Muscularis Layer (mm)",t:"n",ph:"mm",ht:"Dog: 0.5-1.0 mm; Thickened = lymphoma / IBD"},
+  {id:"si_ratio",lb:"Mucosal:Muscularis Ratio",t:"n",ph:"ratio",ht:"Normal: mucosa > muscularis (ratio >1); Reversed in lymphoma"},
   {id:"mu",lb:"Mucosal Echogenicity",t:"s",op:["Normal","Hyperechoic mucosal striping","Irregular mucosal surface","Mucosal ulceration suspected"]},
   {id:"mt",lb:"Motility",t:"s",op:["Normal peristalsis","Reduced peristalsis","Absent peristalsis — ileus","Hypermotility"]},
   {id:"fb",lb:"Foreign Body / Obstruction",t:"s",op:["None","Echogenic — distal shadowing","Linear FB (cats)","Obstruction pattern — proximal dilation"]},
@@ -334,6 +349,9 @@ var OR=[
   {id:"ll",lb:"Left Limb Thickness (mm)",t:"n",ph:"mm"},
   {id:"ec",lb:"Echogenicity",t:"s",op:["Normal — isoechoic to mesenteric fat","Hypoechoic — focal","Hypoechoic — diffuse","Hyperechoic — atrophic","Mixed / heterogeneous","Nodular — mass suspected"],df:{"Hypoechoic — diffuse":["Acute pancreatitis","Pancreatic oedema","Pancreatic abscess"],"Hyperechoic — atrophic":["EPI — exocrine pancreatic insufficiency","Chronic pancreatitis"],"Mixed / heterogeneous":["Chronic pancreatitis","Pancreatic pseudocyst","Necrotic pancreatitis"],"Nodular — mass suspected":["Pancreatic carcinoma","Insulinoma","Gastrinoma"]}},
   {id:"fat",lb:"Peripancreatic Fat",t:"s",op:["Normal","Hyperechoic fat — saponification","Peripancreatic effusion","Mesenteric steatitis"]},
+  {id:"pan_rl_w",lb:"Right Limb Width (mm)",t:"n",ph:"mm",ht:"Dog: 4-10 mm; Cat: 2-6 mm"},
+  {id:"pan_ll_w",lb:"Left Limb Width (mm)",t:"n",ph:"mm"},
+  {id:"pd_d",lb:"Pancreatic Duct Diameter (mm)",t:"n",ph:"mm",ht:"Normal: not visible or <1 mm; Dilated >2 mm = obstruction"},
   {id:"dc",lb:"Pancreatic Duct",t:"s",op:["Not dilated","Mildly dilated","Markedly dilated — obstruction"]},
   {id:"rem",lb:"Remarks",t:"txt",ph:"Extent of peripancreatic involvement, duodenal wall changes..."}
  ]},
@@ -341,6 +359,10 @@ var OR=[
   {id:"rwid",lb:"Right Adrenal Width (cm)",t:"n",ph:"cm",ht:"Dog: < 0.76cm / Cat: < 0.46cm"},
   {id:"lwid",lb:"Left Adrenal Width (cm)",t:"n",ph:"cm"},
   {id:"sh",lb:"Shape / Contour",t:"s",op:["Normal — bilobed peanut shape","Rounded — bilateral","Rounded — unilateral R","Rounded — unilateral L","Nodule identified R","Nodule identified L","Mineralisation"],df:{"Rounded — bilateral":["PDH — pituitary-dependent hyperadrenocorticism","Bilateral adrenal hyperplasia"],"Rounded — unilateral R":["Adrenal adenoma","Adrenal carcinoma","Phaeochromocytoma"],"Rounded — unilateral L":["Adrenal adenoma","Adrenal carcinoma","Phaeochromocytoma"],"Nodule identified R":["Adrenocortical adenoma","Adrenocortical carcinoma","Phaeochromocytoma"],"Nodule identified L":["Adrenocortical adenoma","Adrenocortical carcinoma","Phaeochromocytoma"]}},
+  {id:"r_thick",lb:"Right Adrenal Thickness (cm)",t:"n",ph:"cm",ht:"Dog: <0.76 cm width (aortophrenic angle); Cat: <0.46 cm"},
+  {id:"l_thick",lb:"Left Adrenal Thickness (cm)",t:"n",ph:"cm"},
+  {id:"r_len",lb:"Right Adrenal Length (cm)",t:"n",ph:"cm",ht:"Dog: 1.5-3.0 cm length; Cat: 0.8-1.5 cm"},
+  {id:"l_len",lb:"Left Adrenal Length (cm)",t:"n",ph:"cm"},
   {id:"ec",lb:"Echogenicity",t:"s",op:["Normal — uniform","Hyperechoic","Hypoechoic","Mixed — mineralisation","Cavitary"]},
   {id:"vi",lb:"Vascular Invasion",t:"s",op:["None","CVC thrombus — right adrenal","Aortic invasion suspected"]},
   {id:"rem",lb:"Remarks",t:"txt",ph:"Contralateral adrenal, caudal vena cava..."}
@@ -348,6 +370,9 @@ var OR=[
  {id:"ln",lb:"Lymph Nodes",ic:"🔵",ps:[
   {id:"ml",lb:"Mesenteric LN Size (cm)",t:"n",ph:"cm",ht:"Dog: < 1.0cm / Cat: < 0.5cm"},
   {id:"mn",lb:"No. Enlarged",t:"n",ph:"number"},
+  {id:"ln_long",lb:"Largest LN — Long axis (cm)",t:"n",ph:"cm",ht:"Mesenteric LN: Dog <1.0 cm; Cat <0.5 cm short axis"},
+  {id:"ln_short",lb:"Largest LN — Short axis (cm)",t:"n",ph:"cm",ht:"L:S ratio normal >1.5 (elongated); <1.5 = rounded (neoplastic pattern)"},
+  {id:"ln_ls",lb:"L:S Ratio",t:"n",ph:"ratio",ht:"Normal >1.5 (elongated); Rounded <1.5 = neoplastic pattern"},
   {id:"app",lb:"Mesenteric LN Assessment",t:"s",op:["Normal — not enlarged","Mildly enlarged < 1cm","Moderately enlarged 1-2cm","Severely enlarged > 2cm","Multiple clusters"],df:{"Mildly enlarged < 1cm":["Reactive lymphadenopathy","Early inflammation"],"Moderately enlarged 1-2cm":["Reactive — GI infection","Lymphoma","Mesenteric lymphadenitis"],"Severely enlarged > 2cm":["Multicentric lymphoma","Metastatic neoplasia","Fungal infection"],"Multiple clusters":["Multicentric lymphoma","Disseminated metastasis"]}},
   {id:"ec",lb:"LN Echogenicity",t:"s",op:["Normal — hypoechoic rim","Uniformly hypoechoic — lymphoma pattern","Hyperechoic centre","Mixed — necrotic"],df:{"Uniformly hypoechoic — lymphoma pattern":["Multicentric lymphoma","Haemangiosarcoma metastasis"]}},
   {id:"il",lb:"Iliac / Sublumbar LN",t:"s",op:["Normal","Enlarged — reactive","Enlarged — neoplastic","Calcified — granuloma"]},
@@ -363,6 +388,7 @@ var OR=[
  ]},
  {id:"peri",lb:"Peritoneum",ic:"🌊",ps:[
   {id:"ff",lb:"Free Peritoneal Fluid",t:"s",op:["None","Trace — dependent areas","Mild","Moderate","Large — generalised ascites","Echogenic — haemoabdomen"],df:{"Mild":["Hypoalbuminaemia","Early peritonitis","Right-sided CHF"],"Moderate":["Hypoalbuminaemia","Peritonitis","Neoplastic effusion"],"Large — generalised ascites":["FIP peritonitis (cat)","Uroabdomen","Chylous effusion","Neoplasia"],"Echogenic — haemoabdomen":["Haemangiosarcoma rupture","Splenic rupture","Anticoagulant rodenticide","Trauma"]}},
+  {id:"fluid_depth",lb:"Max Fluid Depth (cm)",t:"n",ph:"cm",ht:"Trace: <1 cm; Mild: 1-3 cm; Moderate: 3-5 cm; Large: >5 cm"},
   {id:"fc",lb:"Fluid Character",t:"s",op:["NA","Anechoic — transudate","Mildly echogenic — modified transudate","Echogenic — exudate / blood","Fibrinous strands present"]},
   {id:"gas",lb:"Free Peritoneal Gas",t:"s",op:["Absent","Present — GI perforation suspected"]},
   {id:"pm",lb:"Peritoneal Masses",t:"s",op:["None","Hyperechoic mesenteric mass","Omental mass — caking","Peritoneal implants",],df:{"Peritoneal implants":["Carcinomatosis","Mesothelioma","Disseminated lymphoma"],"Omental mass — caking":["FIP — granulomatous omentum (cat)","Carcinomatosis"]}},
@@ -374,7 +400,7 @@ var OR=[
 var NV=new Set(["Normal","None","Absent","NA","Not visualised","Normal bilaterally","Well distended","Normal peristalsis","Normal — 5 layers preserved","Normal — not enlarged","Not dilated","Clear — anechoic","Visualised — adequate","Normal — bilobed peanut shape","Normal — uniform","Diagnostic — complete","Diagnostic — adequate","Normal — homogeneous","Normal — isoechoic to spleen","Normal — isoechoic to mesenteric fat","Normal faecal material","Female — neutered","Male — neutered","Normal / not visible","Not visualised — normal","Normal — distinct CMD","Normal — hypoechoic rim"]);
 var isN=function(v){return !v||NV.has(v)||v.indexOf("Normal")===0||v==="None"||v==="NA"||v==="Absent"||v.indexOf("Not vis")===0||v==="Not dilated";};
 var cur=0,D={},IMGS=[];
-var DOCTOR={name:"Dr. K.S. Saikrishna",qual:"M.V.Sc, Ph.D.",desig:"Assistant Professor & Head",dept:"Department of Veterinary Medicine",inst:"College of Veterinary Science, Proddatur — SVVU, Andhra Pradesh"};
+var DOCTOR={name:"",qual:"",desig:"",dept:"",inst:""};
 for(var i=0;i<OR.length;i++){
   D[OR[i].id]={};
   var icEl=document.getElementById("ic-"+OR[i].id);
